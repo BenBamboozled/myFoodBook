@@ -1,0 +1,25 @@
+{% extends "foodBookApp/base.html"%}
+{% block content %}
+
+
+<div class="forms">
+    <div class="chat  d-flex flex-column ">
+        {% for message in messages  %}
+        <div class="chat-body d-flex flex-row mb-2">
+            <div>
+                <img src="{{ message.user.profile.profilePic.url }}" class="m-1" id="profile-pic" width="75px" height="75px"/> 
+
+            </div>
+            <div>
+                <a href="/profile/{{message.user.username }}" class="mt-1">{{ message.user.username }}</a>
+            </div>
+            
+            
+
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock content %}

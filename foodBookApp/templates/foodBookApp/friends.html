@@ -1,0 +1,42 @@
+
+{% extends "foodBookApp/base.html"%}
+{% block content %}
+
+    {% if is_empty %}
+        <h1>No invatations here..</h1>
+    {% endif %}
+ 
+    {% for friend in profile.get_friends %}
+        <div class="container-fluid">
+            <div class="post d-flex justify-content-center">
+                <div class="profile-body d-flex flex-column justify-content-center mb-2">
+
+                    <img src={{friend.profilePic.url}}></img>
+
+
+                    <h3 class="text-center">{{friend}}</h3>
+
+                    <div class="d-flex justify-content-center">
+
+                        <div class="d-flex flex-row mb-2" class="ml-2">
+                            <a href="/profile/{{friend}}">
+                                <button class="btn btn-sm form-button">See profile</button>
+                            </a>
+
+                            <form action="{% url 'remove-friend' %}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="profile_pk" value={{friend.profile.id}}>
+                                <button class="btn btn-sm btn-danger ml-2 mb-2" >Remove Friend</button>
+                            </form> 
+
+                    </div>
+                   
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+{% endblock content %}

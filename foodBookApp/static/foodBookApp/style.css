@@ -1,0 +1,380 @@
+body {
+  background-color: #bec0c3;
+}
+
+textarea:focus,
+input:focus {
+  outline: none;
+}
+
+.main-nav {
+  background-color: #1ebea5;
+}
+
+.post {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 250px;
+}
+
+.post-body img {
+  object-fit: cover;
+  width: 95%;
+  height: 95%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.post-header {
+  width: 75%;
+  height: 2.5rem;
+  background-color: #273443;
+  color: #1ebea5;
+  margin: 0.5rem 0.7rem 0 0.7rem;
+}
+
+.post-body {
+  background: #dddddd;
+  color: black;
+  margin: 0rem 0.7rem;
+  width: 75%;
+}
+
+.feed {
+  margin-top: 75px;
+}
+
+.profile-header {
+  background: #273443;
+  display: block;
+  margin: auto auto;
+  width: 80%;
+}
+
+.profile-body {
+  background: #dddddd;
+  color: #1ebea5;
+  margin: 0 0.7rem;
+  width: 95%;
+}
+
+.profile-buttons {
+  height: 3rem;
+  width: 3rem;
+  background: #a6a6a6;
+  color: black;
+  font-size: 0.8rem;
+  display: block;
+  margin: 0.25rem;
+}
+
+.desktopMenu {
+  height: 90%;
+  width: 250px;
+  background-color: #273443;
+  position: fixed;
+  left: 0;
+  border-right: 3px solid #1ebea5;
+}
+
+.desktopMenu.open {
+  -webkit-transform: translateX(0%);
+  transform: translateX(0%);
+}
+.forms {
+  margin-left: 250px;
+}
+
+@media (max-width: 767px) {
+  .post {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0;
+  }
+  .feed {
+    margin-top: 75px;
+    margin-left: 0;
+  }
+
+  .forms {
+    margin-left: 0;
+  }
+
+  .post-body img {
+    object-fit: cover;
+    width: 95%;
+    height: 95%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .post-header {
+    width: 95%;
+    height: 2.5rem;
+    background-color: #273443;
+    color: #1ebea5;
+    margin: 0.5rem 0.7rem 0 0.7rem;
+  }
+
+  .post-body {
+    background: #dddddd;
+    color: black;
+    margin: 0 0.7rem;
+    width: 95%;
+  }
+
+  .desktopMenu {
+    height: 90%;
+    width: 250px;
+    background-color: #273443;
+    position: fixed;
+    left: 0;
+    -webkit-transform: translateX(-100%);
+    transform: translateX(-100%);
+    -webkit-transition: all ease 0.25s;
+    transition: all ease 0.25s;
+  }
+}
+
+#header {
+  width: 100 px;
+  background-color: #273443;
+  height: 25px;
+}
+
+#title {
+  font-family: Ubuntu;
+  font-size: 18px;
+  color: #1ebea5;
+}
+
+#heading {
+  width: 100 px;
+  background-color: #1ebea5;
+  height: 10%;
+}
+.desktop-search {
+  position: relative;
+  right: 19%;
+  top: 0.25rem;
+}
+
+#search-query {
+  width: 300px;
+}
+
+.search-bar {
+  display: flex;
+}
+
+.search {
+  font-size: 22px;
+  position: absolute;
+  right: 15%;
+  top: 2rem;
+}
+
+.desktop-btn {
+  background: 0;
+  border: 0;
+}
+
+.edit {
+  font-size: 22px;
+  position: absolute;
+  right: 5%;
+  top: 2rem;
+  color: black;
+}
+
+.mobileSearch {
+  flex-grow: 1;
+  padding: 0 0.5em;
+  border: 0;
+  background: 0;
+  position: fixed;
+  width: 15rem;
+  top: 1.75rem;
+  right: 0;
+  bottom: 0;
+  -webkit-transform: translateY(-200%);
+  transform: translateY(-200%);
+  -webkit-transition: all ease 0.25s;
+  transition: all ease 0.25s;
+}
+
+.mobileSearch.open {
+  -webkit-transform: translateY(0%);
+  transform: translateY(0%);
+}
+#search-bar-input {
+  width: 100%;
+  height: 2rem;
+  background: white;
+  position: relative;
+  right: 35%;
+}
+
+.search-area {
+  width: 30%;
+  position: absolute;
+  right: 15%;
+  top: 1.5rem;
+}
+
+.page {
+  font-size: 1rem;
+  position: absolute;
+  left: 3.5rem;
+  top: 0.5rem;
+}
+
+#new-post-button {
+  position: absolute;
+  right: 10%;
+}
+
+#new-post a:link {
+  color: black;
+}
+
+#hamburger-menu {
+  font-size: 36px;
+  color: #273443;
+}
+
+.menu-link {
+  font-size: 32px;
+  color: #1ebea5;
+  margin-bottom: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+  border-bottom: 3px solid #1ebea5;
+}
+
+.menuBottom {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  border-top: 3px solid #1ebea5;
+}
+
+#profile-pic {
+  border-radius: 50%;
+}
+
+#buttons a {
+  color: black;
+}
+a {
+  color: #1ebea5;
+}
+a:hover {
+  color: white;
+  text-decoration: none;
+}
+
+.social-buttons {
+  font-size: 2rem;
+  width: 3rem;
+}
+
+.social-buttons :hover {
+  color: #1ebea5;
+}
+
+.social-labels {
+  font-size: 15px;
+}
+
+.post-buttons {
+  height: 2.5rem;
+  width: 2.5rem;
+  background: #a6a6a6;
+  color: black;
+  font-size: 0.75rem;
+  display: absolute;
+  right: 0px;
+  bottom: 0.5rem;
+}
+
+.post-button {
+  width: 65%;
+  font-size: 28px;
+  background: #1ebea5;
+  border: none;
+  border-radius: 600px;
+}
+
+.tag-container {
+  border: 2px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  color: black;
+  display: flex;
+  background: white;
+}
+
+.tag-container .tag {
+  border: 1px solid #ccc;
+  padding: 5px;
+  margin: 5px;
+  display: flex;
+  align-items: center;
+  border-radius: 3px;
+}
+
+.tag-container input {
+  flex: 1;
+  width: 95%;
+  height: 1.5rem;
+  font-size: 12px;
+  padding: 5px;
+  outline: none;
+  border: 0;
+  overflow: scroll;
+  background: white;
+  display: flex;
+}
+
+.tags {
+  width: 95%;
+  cursor: pointer;
+}
+
+.post-input {
+  width: 95%;
+  background: white;
+}
+
+.form-button {
+  background: #1ebea5;
+}
+.post-button {
+  background: transparent;
+  border: none;
+  height: 3rem;
+  width: 3rem;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.chat-body {
+  width: 95%;
+  border: 2px solid #000;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 28px;
+  background: #ccc;
+}
+
+.chat {
+  display: block;
+  margin: auto;
+}

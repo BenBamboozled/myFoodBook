@@ -1,0 +1,22 @@
+{% extends "foodBookApp/splash.html" %}
+{% block content %}
+{% load static %}
+
+
+<div class="center-div">
+    <div class="form">
+        <img src="{% static 'foodBookApp/splash-logo.png' %}" class="splash-logo mb-2 mt-2 pl-5 pr-5" />
+
+        <div class="center">
+            <a href="{% url 'login' %}" class="button" id="login-button">Login</a>
+        </div>
+
+        <div class="center">
+            <a href="{% url 'register' %}" class="button" id="register-button">Register</a>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}
+

@@ -1,0 +1,174 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <!-- Bootstrap CSS, Custom CSS, FontAwesome CSS, GoogleFont Ubuntu -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="{% static 'foodBookApp/style.css' %}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="{% static 'js/jquery-3.5.1.js' %}"></script>
+    <script src="https://kit.fontawesome.com/9ee4d5cfa0.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet"/>
+
+    <title>My Food Book</title>
+  </head>
+
+  <body>
+    <div class="container-fluid">
+      <!-- START OF FIXED TOP -->
+      <div class="fixed-top">
+
+        <!-- START OF HEADER -->
+        <div class="row" id="header">
+          <p class="text-center m-auto " id="title">My Food Book</p>
+        </div>
+        <!-- END OF HEADER -->
+
+
+        <!-- START OF HEADING -->
+        <div class="row" id="heading">
+          <i class="fas fa-bars mt-1 pl-4 mt-1 d-block d-sm-block d-md-block d-lg-none d-xl-none"  job="menu" id="hamburger-menu"></i>
+        
+            <p class="ml-2 mt-2 d-block d-sm-block d-md-block d-lg-none d-xl-none">Main Page</p>
+        
+
+          <div class="col mt-1 d-none d-sm-none d-md-none d-lg-block d-xl-block">
+            <a href="/"><img src="http://localhost:8000/static/foodBookApp/logo.png" class="ml-1" /></a>
+          </div>
+
+          <div class="mobileSearch d-block d-sm-block d-md-none d-lg-none d-xl-none">
+            <input id="search-bar-input" type="text"  placeholder="Search" aria-label="search"/>
+          </div>
+
+          <div class="desktop-search d-none d-sm-none d-md-block d-lg-block d-xl-block">
+            <input id="search-query" type="text"  placeholder="Search" aria-label="search"/>
+          </div>
+
+          <i class="fas fa-search search d-block d-sm-block d-md-none d-lg-none d-xl-none" job="make-search" style="font-size: 22px;"></i>
+          <i class="fas fa-search search d-none d-sm-none d-md-block d-lg-block d-xl-block" job="desktop-search" style="font-size: 22px;"></i>
+
+  
+          <a href="{% url 'new-post' %}" id="new-post">
+            <i class="fas fa-pen edit"  job="new-post"  ></i>
+          </a>
+
+        </div>
+        <!-- END OF HEADING -->
+
+          <!-- MENU -->
+          <div class="desktopMenu">
+
+            <div class="menu-link" id="my-profile">
+              <a href="{% url 'my-profile' %}">
+                <img src="{{user.profile.profilePic.url}}" class="mr-1" id="profile-pic" height="32px" width="32px"/>
+
+                My Profile
+              </a>
+
+            </div>
+
+            <div class="menu-link" id="home-feed">
+              <a href="{% url 'main-feed' %}">
+                <i class="fas fa-home mr-1"></i>
+                Home Feed
+              </a>
+              
+            </div>
+
+            <div class="menu-link" id="make-post">
+              <a href="{% url 'new-post' %}">
+                <i class="fas fa-pen mr-1"></i>
+                Make Post
+              </a>
+              
+            </div>
+
+            <div class="menu-link" id="messages">
+              <a href="#">
+                <i class="far fa-envelope mr-1"></i>
+                Messages
+              </a>
+
+            </div>
+            <div class="menu-link" id="friends">
+              <a href="{% url 'my-friends' %}">
+                <i class="fas fa-user-friends mr-1"></i>
+                Friends
+              </a>
+            </div>
+
+            <div class="menu-link" id="invite">
+              <a href="{% url 'my-invites' %}">
+                <i class="fas fa-user-friends mr-1"></i>
+                Invites
+              </a>
+            </div>
+
+            <div class="menu-link" id="explore-users">
+              <a href="{% url 'explore-users' %}">
+                <i class="fas fa-user-friends mr-1 text-sm"></i>
+                <span style="font-size: 28px;">Explore Users</span>
+              </a>
+            </div>
+
+            <div class="menuBottom">
+              <div class="menu-link" id="logout">
+                <a href="{% url 'logout' %}">
+                  <i class="fas fa-sign-out-alt mr-1"></i>
+                  Log Out
+                </a>
+              </div>
+  
+              <div class="menu-link" id="settings">
+                <a href="{% url 'edit-profile' %}">
+                  <i class="fas fa-cog mr-1"></i>
+                  Settings
+                </a>
+              </div>
+          </div>
+
+          <!-- END OF MENU -->
+        </div>
+      </div>
+
+
+    </div>
+
+
+
+    <div class="container-fluid ">
+
+        <div class="feed" >
+
+            {% block content %} {% endblock content%}
+
+        </div>
+
+      </div>
+  </div>
+
+</div>
+</div>
+
+
+    <!-- Optional JavaScript -->
+    <!-- , then Popper.js, then Bootstrap JS, the custom JS -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+      integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+      integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+      crossorigin="anonymous"
+    ></script>
+
+    <script src="{% static 'foodBookApp/script.js' %}"></script>
+  </body>
+</html>

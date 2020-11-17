@@ -1,0 +1,84 @@
+{% extends "foodBookApp/base.html" %}
+
+
+{% block content %}
+        <div class="forms">
+            <form method="POST">
+                {% csrf_token %}
+                <fieldset class="form-group">
+                    <legend class="border-bottom mb-4">Delete Post</legend>
+                    <h2>Are you sure you want to delete this Post?</h2>
+                </fieldset>
+                <div class="form-group">
+                    <button class="btn btn-outline-danger" type="submit">Yes, Delete</button>
+                    <a class="btn btn-outline-secondary" href="{% url 'my-profile' %}">No </a>
+                </div>
+            </form>
+        </div>
+
+
+        <div class="user-feed">
+
+   
+        
+                             <!-- Start Post -->
+                 
+                             <div class="post d-flex flex-column align-items-center ">
+                                <div class="post-header d-flex flex-row justify-content-between">
+                                    <div class="d-flex flex-row">
+                                        <img src="{{ user.profile.profilePic.url }}" class="m-1" id="profile-pic" height="32px"/> 
+                                        <a href="{% url 'my-profile' %}" class="mt-1">{{ user.username }}</a>
+            
+                                    </div>
+                                  
+                                  <div class="d-flex flex-row">
+                                    <button type="button"  job="edit-post" class="post-buttons d-flex flex-column align-items-center mr-1">
+                                        <i class="fas fa-pen mt-1" value="{{ post.id }}" id="pen"></i>
+                
+                                        <p>Edit</p>
+                                    </button>
+            
+                                    <button type="button" job="delete-post" class="post-buttons d-flex flex-column align-items-center mr-1">
+                                        <i class="fas fa-trash mt-1"  value="{{ post.id }}" id="trash"></i>
+                
+                                        <p>Delete</p>
+                                    </button>
+            
+                                  </div>
+                                  
+                                </div>
+                                 
+                                <div class="post-body">
+                                   <p class="ml-1">{{ post.body }}</p>
+        
+                                   {% if post.image %}
+                                   <img src="{{ post.image.url }}" />
+                                   
+                                   {% endif %}
+                                   
+                            
+                            
+                                   <div class="social-buttons pb-2 d-flex justify-content-center">
+                                     <div>
+                                      <i class="far fa-thumbs-up pl-5 pr-5" job="like" post-id=" ">0</i>
+                                      <p class="social-labels pl-5 pr-5">Like</p>
+                                     </div>
+                                     <div>
+                                      <i class="fas fa-comment pl-5 pr-5" job="comment" post-id=" ">2</i>
+                                      <p class="social-labels pl-4 pr-5">Comment</p>
+                                     </div>
+                            
+                                     <div>
+                                      <i class="fas fa-share-alt pl-4" job="share" post-id=" "></i>
+                                      <p class="social-labels pl-3 pr-5">Share</p>
+                                     </div>
+                                  
+                                  </div>
+                            
+                              </div>
+                              
+                            
+                            </div>
+        </div>
+
+{% endblock content %}

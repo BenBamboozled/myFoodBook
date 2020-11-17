@@ -1,0 +1,18 @@
+{% extends "foodBookApp/base.html"%}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="forms">
+    <form action="{% url 'new-post' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">New Post</legend>
+            {{form | crispy}}
+        </fieldset>
+        <div class="form-group">
+            <button class="btn form-button" type="submit">Post</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
+

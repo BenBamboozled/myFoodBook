@@ -1,0 +1,33 @@
+
+{% extends "foodBookApp/splash.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container-fluid center-div mt-lg-0 pt-lg-0">
+    <div class="form">
+        <form method="POST" class="register-form d-flex flex-column justify-content-center">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Create an Account</legend>
+                {{ form|crispy }}
+            </fieldset>
+            <div class="form-group">
+                <button class="btn form-button" type="submit">Sign Up</button>
+            </div>
+        </form>
+        <div class="border-top pt-3">
+            <small class="text muted">
+                Already have an Account?
+                <a class="ml-2" href="{% url 'login' %}">Sign In</a>
+
+            </small>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+{% endblock content %}
+

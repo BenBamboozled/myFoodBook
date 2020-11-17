@@ -1,0 +1,27 @@
+
+{% extends "foodBookApp/splash.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+
+<div class="center-div">
+    <div class="form">
+        <img src="{% static 'foodBookApp/splash-logo.png' %}" class="splash-logo mb-2 mt-2" />
+        <h5 class="pt-2 ml-2 mr-2">You have been logged out.</h5>
+            <div class="ml-2">
+                <div class="center">
+                    <a href="{% url 'login' %}" class="button" id="login-button">Login</a>
+                </div>
+        
+            </div>
+    </div>
+
+</div>
+
+
+
+
+
+
+{% endblock content %}

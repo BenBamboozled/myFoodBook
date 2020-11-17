@@ -1,0 +1,27 @@
+{% extends "foodBookApp/base.html"%}
+{% block content %}
+
+
+<div class="forms">
+    <div class="chat  d-flex flex-column ">
+        {% for direct in directs  %}
+        <div class="chat-body d-flex flex-row mb-2">
+            <div>
+                <img src="{{ direct.sender.profile.profilePic.url }}" class="m-1" id="profile-pic" width="75px" height="75px"/> 
+
+            </div>
+            <div>
+                <a href="/profile/{{ direct.sender.profile.user.username }}" class="mt-1">{{ direct.sender.profile.user.username }}</a>
+            </div>
+            <div>
+                <p>{{ direct.date }}</p>
+                <p>{{ direct.body }}</p>
+            </div>
+
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock content %}
