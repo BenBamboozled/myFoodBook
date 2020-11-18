@@ -1,5 +1,4 @@
 # myFoodBook
-# MyFoodBook
 ## Instructions
 1. if you do not have python install download and install for your computer make sure to add python to PATH im using version 3.7 but newer versions should work fine
 2. After python is installed you need to install dependencies requirements. You can do that with this command in cmd or terminal
