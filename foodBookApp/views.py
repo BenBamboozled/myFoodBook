@@ -4,9 +4,6 @@ from django.db.models import Q
 from django.template.defaultfilters import slugify
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.http import HttpResponse, JsonResponse
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from . forms import AddPostForm,UserRegistrationForm,ProfileUpdateForm,AddCommentForm
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.urls import reverse, reverse_lazy
