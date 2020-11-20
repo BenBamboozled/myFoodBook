@@ -1,8 +1,4 @@
 from django.shortcuts import render, redirect, get_object_or_404
-<<<<<<< HEAD
-from .models import Post, Profile, Relationship, Comment
-=======
->>>>>>> f0701993df2dd0ea758d0cbdf0327056c06fa97c
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.template.defaultfilters import slugify
