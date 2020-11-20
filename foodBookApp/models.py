@@ -4,7 +4,7 @@ from PIL import Image #For uploading images
 from django.utils import timezone #for datePosted field in post model
 from taggit.managers import TaggableManager #tags fors post
 from django.db.models.signals import post_save #signal to creat profile
-from django.shortcuts import render, redirect #for rendering htttp pages
+from django.shortcuts import render, redirect, reverse #for rendering htttp pages
 from django.db.models import Q, Max #for complex queries on database
 
 ##Post Model holds all info for each user post, foreign key is user who poster
@@ -27,12 +27,17 @@ class Post(models.Model):
     def total_likes(self):
         return self.likes.all().count()
 
+<<<<<<< HEAD
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
     body = models.TextField(max_length=300)
     datePosted =  models.DateTimeField(default=timezone.now)
+=======
+    def get_absolute_url(self):
+        return reverse('view-post', kwargs={'pk': self.pk})
+>>>>>>> f0701993df2dd0ea758d0cbdf0327056c06fa97c
 
 class ProfileManager(models.Manager):
     def get_all_profiles_to_invite(self, sender):
@@ -92,6 +97,9 @@ class Profile(models.Model):
             output_size = (100, 100)
             img.thumbnail(output_size)
             img.save(self.profilePic.path)
+
+    def get_absolute_url(self):
+        return reverse('user-profile', kwargs={'username': self.user.username})
 
 STATUS_CHOICES = (
     (

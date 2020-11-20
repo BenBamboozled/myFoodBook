@@ -7,8 +7,9 @@
     {% endif %}
  
     {% for obj in qs %}
+        {% include 'foodBookApp/snippets/profile_block.html' %}
 
-    <div class="container-fluid">
+    <!-- <div class="container-fluid">
         <div class="post d-flex justify-content-center">
             <div class="profile-body d-flex flex-column justify-content-center mb-2">
                 <div class="d-flex justify-content-center">
@@ -58,7 +59,7 @@
 
             </div>
         </div>
-    </div>
+    </div> -->
 
     {% endfor %}
 

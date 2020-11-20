@@ -25,12 +25,15 @@
         <!-- START OF HEADING -->
         <!-- https://getbootstrap.com/docs/4.0/components/navbar/ -->
         <nav class="navbar navbar-expand-sm navbar-light main-nav py-0">
+
+          <!-- Navbar toggler button for mobile/small window -->
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
 
           <a href="{% url 'main-feed' %}"><img src="{% static 'foodBookApp/logo.png' %}" class="img-responsive"/></a>
 
+          <!-- User profile img and dropdown -->
           <div class="dropdown order-sm-last">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <img src="{{user.profile.profilePic.url}}" class="img-responsive" height="26px" width="26px"/>
@@ -48,8 +51,8 @@
 
             <ul class="navbar-nav mx-auto">
               <li class="nav-item">
-                <form class="form-inline">
-                  <input class="form-control form-control-sm mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <form class="form-inline" action="{% url 'search' %}">
+                  <input class="form-control form-control-sm mr-sm-2" type="search" name="q" placeholder="Search" aria-label="Search">
                   <!-- <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Search</button> -->
                   <!-- <i class="fas fa-search" type="submit"></i> -->
                 </form>
