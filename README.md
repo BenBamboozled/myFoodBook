@@ -2,7 +2,7 @@
 ## Instructions
 1. if you do not have python installed, download and install for your computer make sure to add python to PATH im using version 3.7 but newer versions should work fine
 2. After python is installed you need to install dependencies requirements. You can do that with this command in cmd or terminal\
-``pip install django django-crispy-forms django-taggit Pillow``
+``pip install django django-crispy-forms django-taggit django-autocomplete-light Pillow``
 or
 ``pip install -r requirements.txt``
 3. Now clone or download the source code from github
@@ -20,3 +20,6 @@ Reference for github fork and pull request workflow
 https://github.com/susam/gitpr
 
 Gist: Fork a personal copy of repository, (recommended) work on self/feature branch, pull request diffs to main repository (forked-from).  Update personal forked repository with main repository changes by pulling to main.
+
+## Notes
+- If db.sqlite3 still tracked by git after gitignore entry update, ``git update-index --skip-worktree db.sqlite3`` in root directory to untrack (unstage if staged)

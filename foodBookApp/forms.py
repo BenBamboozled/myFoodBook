@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
 from .models import Post,  Profile
+from dal import autocomplete
 
 class UserRegistrationForm(UserCreationForm):
     email = forms.EmailField()
@@ -23,11 +24,18 @@ class ProfileUpdateForm(forms.ModelForm):
         model = Profile
         fields = ['profilePic', 'bio']
 
-
-class AddPostForm(forms.ModelForm):
+class UpdatePostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields=['image','body', 'tags' , 'privacy']
+        widgets = {
+            'body': forms.Textarea(attrs={'rows':3,}),
+            'tags': autocomplete.TaggitSelect2(url='tags-autocomplete'),
+        }
+
+class SearchForm(forms.Form):
+    query = autocomplete.TaggitSelect2(url='tags-autocomplete')
+
 
 
 

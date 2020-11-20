@@ -61,10 +61,11 @@
 
    
     {% for post in posts %}
+        {% include 'foodBookApp/snippets/post_block.html' %}
 
                      <!-- Start Post -->
          
-                     <div class="post d-flex flex-column align-items-center ">
+                     <!-- <div class="post d-flex flex-column align-items-center ">
                         <div class="post-header d-flex flex-row justify-content-between">
                             <div class="d-flex flex-row">
                                 <img src="{{ user.profile.profilePic.url }}" class="m-1" id="profile-pic" height="32px"/> 
@@ -141,7 +142,7 @@
                       </div>
                       
                     
-                     </div>
+                     </div> -->
 
                      <!-- END POST -->
        
