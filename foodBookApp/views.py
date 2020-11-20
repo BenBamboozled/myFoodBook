@@ -4,20 +4,17 @@ from django.db.models import Q
 from django.template.defaultfilters import slugify
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-<<<<<<< HEAD
 from django.http import HttpResponse, JsonResponse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from . forms import AddPostForm,UserRegistrationForm,ProfileUpdateForm,AddCommentForm
-=======
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
->>>>>>> f0701993df2dd0ea758d0cbdf0327056c06fa97c
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from .models import Post, Profile, Relationship
+from .models import Post, Profile, Relationship, Comment
 from .forms import UpdatePostForm, UserRegistrationForm, ProfileUpdateForm, SearchForm
 
 from dal import autocomplete
