@@ -20,141 +20,85 @@
 
   <body>
     <div class="container-fluid">
-      <!-- START OF FIXED TOP -->
       <div class="fixed-top">
-
-        <!-- START OF HEADER -->
-        <div class="row" id="header">
-          <p class="text-center m-auto " id="title">My Food Book</p>
-        </div>
-        <!-- END OF HEADER -->
-
-
         <!-- START OF HEADING -->
-        <div class="row" id="heading">
-          <i class="fas fa-bars mt-1 pl-4 mt-1 d-block d-sm-block d-md-block d-lg-none d-xl-none"  job="menu" id="hamburger-menu"></i>
+        <!-- https://getbootstrap.com/docs/4.0/components/navbar/ -->
+        <nav class="navbar navbar-expand-sm navbar-light main-nav py-0">
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <a href="{% url 'main-feed' %}"><img src="{% static 'foodBookApp/logo.png' %}" class="img-responsive"/></a>
+
+          <div class="dropdown order-sm-last">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <img src="{{user.profile.profilePic.url}}" class="img-responsive" height="26px" width="26px"/>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="/">View profile</a>
+              <a class="dropdown-item" href="{% url 'edit-profile' %}">Edit profile</a>
+              <a class="dropdown-item" href="#">Settings</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{% url 'logout' %}">Log Out</a>
+            </div>
+          </div>
         
-            <p class="ml-2 mt-2 d-block d-sm-block d-md-block d-lg-none d-xl-none">Main Page</p>
-        
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
-          <div class="col mt-1 d-none d-sm-none d-md-none d-lg-block d-xl-block">
-            <a href="/"><img src="http://localhost:8000/static/foodBookApp/logo.png" class="ml-1" /></a>
-          </div>
+            <ul class="navbar-nav mx-auto">
+              <li class="nav-item">
+                <form class="form-inline">
+                  <input class="form-control form-control-sm mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                  <!-- <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Search</button> -->
+                  <!-- <i class="fas fa-search" type="submit"></i> -->
+                </form>
+              </li>
+            </ul>
 
-          <div class="mobileSearch d-block d-sm-block d-md-none d-lg-none d-xl-none">
-            <input id="search-bar-input" type="text"  placeholder="Search" aria-label="search"/>
-          </div>
-
-          <div class="desktop-search d-none d-sm-none d-md-block d-lg-block d-xl-block">
-            <input id="search-query" type="text"  placeholder="Search" aria-label="search"/>
-          </div>
-
-          <i class="fas fa-search search d-block d-sm-block d-md-none d-lg-none d-xl-none" job="make-search" style="font-size: 22px;"></i>
-          <i class="fas fa-search search d-none d-sm-none d-md-block d-lg-block d-xl-block" job="desktop-search" style="font-size: 22px;"></i>
-
-  
-          <a href="{% url 'new-post' %}" id="new-post">
-            <i class="fas fa-pen edit"  job="new-post"  ></i>
-          </a>
-
-        </div>
-        <!-- END OF HEADING -->
-
-          <!-- MENU -->
-          <div class="desktopMenu">
-
-            <div class="menu-link" id="my-profile">
-              <a href="{% url 'my-profile' %}">
-                <img src="{{user.profile.profilePic.url}}" class="mr-1" id="profile-pic" height="32px" width="32px"/>
-
-                My Profile
-              </a>
-
-            </div>
-
-            <div class="menu-link" id="home-feed">
-              <a href="{% url 'main-feed' %}">
-                <i class="fas fa-home mr-1"></i>
-                Home Feed
-              </a>
-              
-            </div>
-
-            <div class="menu-link" id="make-post">
-              <a href="{% url 'new-post' %}">
-                <i class="fas fa-pen mr-1"></i>
-                Make Post
-              </a>
-              
-            </div>
-
-            <div class="menu-link" id="messages">
-              <a href="#">
-                <i class="far fa-envelope mr-1"></i>
-                Messages
-              </a>
-
-            </div>
-            <div class="menu-link" id="friends">
-              <a href="{% url 'my-friends' %}">
-                <i class="fas fa-user-friends mr-1"></i>
-                Friends
-              </a>
-            </div>
-
-            <div class="menu-link" id="invite">
-              <a href="{% url 'my-invites' %}">
-                <i class="fas fa-user-friends mr-1"></i>
-                Invites
-              </a>
-            </div>
-
-            <div class="menu-link" id="explore-users">
-              <a href="{% url 'explore-users' %}">
-                <i class="fas fa-user-friends mr-1 text-sm"></i>
-                <span style="font-size: 28px;">Explore Users</span>
-              </a>
-            </div>
-
-            <div class="menuBottom">
-              <div class="menu-link" id="logout">
-                <a href="{% url 'logout' %}">
-                  <i class="fas fa-sign-out-alt mr-1"></i>
-                  Log Out
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'explore-users' %}" id="explore-users">
+                  <i class="fas fa-users"></i>
+                  Users
                 </a>
-              </div>
-  
-              <div class="menu-link" id="settings">
-                <a href="{% url 'edit-profile' %}">
-                  <i class="fas fa-cog mr-1"></i>
-                  Settings
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'my-friends' %}">
+                  <i class="fas fa-user-friends"></i>
+                  Friends
                 </a>
-              </div>
-          </div>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'my-invites' %}">
+                  <i class="fas fa-bell"></i>
+                  Invites
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <i class="fas fa-envelope"></i>
+                  Messages
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'new-post' %}" id="new-post">
+                  <i class="fas fa-pen" job="new-post"  ></i>
+                  Post
+                </a>
+              </li>
+            </ul>
 
-          <!-- END OF MENU -->
-        </div>
+          </div>
+        </nav>
+        <!-- START OF HEADING -->
       </div>
-
-
     </div>
 
-
-
     <div class="container-fluid ">
-
         <div class="feed" >
-
             {% block content %} {% endblock content%}
-
         </div>
-
-      </div>
-  </div>
-
-</div>
-</div>
-
+    </div>
 
     <!-- Optional JavaScript -->
     <!-- , then Popper.js, then Bootstrap JS, the custom JS -->
