@@ -101,29 +101,39 @@
                     
                            <div class="d-flex justify-content-center">
                             <div class="social-buttons pb-2 d-flex justify-content-center">
-                                <form action="{% url 'like-post' post.pk %}"  method="POST">
+                                <form>
                                     {% csrf_token %}
-                                    <button type="submit", class="btn-success btn-sm pl-4 pr-4" >
+                                {% if request.user not in post.likes.all %}                                    
+                                    <button type="submit" job="like-post" class="btn-success btn-sm pl-4 pr-4" >
                                         
-                                        <i class="far fa-thumbs-up" job="like" name="post_id" ,value="{{ post.id}}">{{post.total_likes}}</i>
-                                        <p class="social-labels">Like</p>
+                                        <i class="far fa-thumbs-up" job="like" name="post_id" id="thumbs-up" value="{{ post.id}}">{{post.total_likes}}</i>   
+                                        <p class="social-labels">Like</p> 
+                                    </button>                                                
+                                {% else %}
+                                    <button type="submit" job="like-post" class="btn-secondary btn-sm pl-4 pr-4" >
+                                        
+                                        <i class="far fa-thumbs-down" job="like" name="post_id" id="thumbs-up" value="{{ post.id}}">{{post.total_likes}}</i>   
+                                        <p class="social-labels">Unlike</p> 
                                     </button>
+                                
+                                {% endif %}
                                 </form>
+
     
                                 <form action="{% url 'view-post' post.pk %}"  method="GET">
                                     {% csrf_token %}
                                     <button type="submit", class="btn-seconday btn-sm " >
                                         
-                                        <i class="fas fa-comment " job="comment" post-id=" ">2</i>
+                                        <i class="fas fa-comment " job="comment" post-id=" ">{{post.total_comments}}</i>
                                   <p class="social-labels">Comment</p>
                                     </button>
                                 </form>
     
-                                <form action="{% url 'like-post' post.pk %}"  method="POST">
+                                <form>
                                     {% csrf_token %}
-                                    <button type="submit", class="btn-info btn-sm btn-sm pl-4 pr-4" >
+                                    <button type="button" class="share btn-info btn-sm btn-sm pl-4 pr-4" data-toggle="modal" data-target="#socialModalCenter" >
                                         
-                                        <i class="fas fa-share-alt " job="share" post-id=" "></i>
+                                        <i class="fas fa-share-alt " job="share" value="{{ post.id}}"></i>
                                         <p class="social-labels ">Share</p>
                                     </button>
                                 </form>

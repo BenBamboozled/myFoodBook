@@ -52,7 +52,7 @@ urlpatterns = [
     path('my-invites/', food_book_views.invites_view, name='my-invites'),
 
     path('post/',food_book_views.PostCreateView.as_view(),name='new-post'),
-    path('post/<int:pk>/', food_book_views.PostDetailView.as_view(),name='view-post'),    
+    path('post/<int:pk>/', food_book_views.post,name='view-post'),    
     path('post/<int:pk>/update', food_book_views.PostUpdateView.as_view(),name='edit-post'),
     path('post/<int:pk>/delete', food_book_views.PostDeleteView.as_view(),name='delete-post')
 

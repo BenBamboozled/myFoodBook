@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import Post,  Profile
+from .models import Post,  Profile, Comment
 
 class UserRegistrationForm(UserCreationForm):
     email = forms.EmailField()
@@ -28,6 +28,11 @@ class AddPostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields=['image','body', 'tags' , 'privacy']
+
+class AddCommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['body']
 
 
 

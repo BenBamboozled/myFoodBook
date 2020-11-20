@@ -15,6 +15,8 @@ class Post(models.Model):
     datePosted = models.DateTimeField(default=timezone.now)
     tags = TaggableManager(blank=True)
     likes = models.ManyToManyField(User, related_name='like_post')
+    total_comments = models.IntegerField(default=0)
+
     PRIVACY_CHOICES = (
         ('public', 'Public'),
         ('private', 'Private'),
@@ -24,6 +26,13 @@ class Post(models.Model):
 
     def total_likes(self):
         return self.likes.all().count()
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
+    body = models.TextField(max_length=300)
+    datePosted =  models.DateTimeField(default=timezone.now)
 
 class ProfileManager(models.Manager):
     def get_all_profiles_to_invite(self, sender):
