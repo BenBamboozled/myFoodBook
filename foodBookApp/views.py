@@ -12,7 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .models import Post, Profile, Relationship, Comment
-from .forms import UpdatePostForm, UserRegistrationForm, ProfileUpdateForm, SearchForm
+from .forms import UpdatePostForm, UserRegistrationForm, ProfileUpdateForm, SearchForm, AddCommentForm
 
 from dal import autocomplete
 from taggit.models import Tag
