@@ -1,18 +1,22 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Post, Profile, Relationship
 from django.contrib.auth.models import User
-from taggit.models import Tag
 from django.db.models import Q
 from django.template.defaultfilters import slugify
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.http import HttpResponse, JsonResponse
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from . forms import AddPostForm,UserRegistrationForm,ProfileUpdateForm
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+from .models import Post, Profile, Relationship
+from .forms import UpdatePostForm, UserRegistrationForm, ProfileUpdateForm, SearchForm
+
+from dal import autocomplete
+from taggit.models import Tag
+from itertools import chain # for merging querysets
 
 ##Register function provides registration form and validates form and saves once complete
 def register(request):
@@ -27,17 +31,51 @@ def register(request):
             form = UserRegistrationForm()
         return render(request, 'foodBookApp/register.html', {'form': form})
 
-##Class based view for creating a post
-class PostCreateView(LoginRequiredMixin, CreateView):
-    model = Post
-    fields = ['body','image','tags']
 
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
 
-    def get_success_url(self):
-            return reverse('my-profile')
+class SearchListView(TemplateView):
+    form_class = SearchForm
+    template_name = 'foodBookApp/search.html'
+    context_object_name = 'search_results'
+
+    def get_queryset(self):
+        # query = self.request.GET.get('q')
+        # if query:
+        #     qs = sorted(chain(
+        #         Profile.objects.filter(user__username__icontains=query),
+        #         Post.objects.filter(tags__name__icontains=query),
+        #     ), key=lambda instance: instance.pk)
+        #     return qs
+        return None
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(SearchListView, self).get_context_data(**kwargs)
+        query = self.request.GET.get('q')
+        if query:
+            context['profiles'] = Profile.objects.filter(user__username__icontains=query)
+            context['posts'] = Post.objects.filter(tags__name__icontains=query)
+
+        return context
+
+# def SearchView():
+
+
+class TagsAutocompleteFromList(autocomplete.Select2ListView):
+    def get_list(self):
+        return ['Diet', 'Healthy', 'Green', 'Low-carb', 'Indulgence', 'Keto']
+
+# class TagAutocomplete(autocomplete.Select2QuerySetView):
+#     def get_queryset(self):
+#         # Don't forget to filter out results depending on the visitor !
+#         if not self.request.user.is_authenticated():
+#             return Tag.objects.none()
+
+#         qs = Tag.objects.all()
+
+#         if self.q:
+#             qs = qs.filter(name__istartswith=self.q)
+
+#         return qs
 
 ##EditProfile fuinction provides form to allow user to update profile, will validate and update form if valid
 @login_required
@@ -72,20 +110,32 @@ def home(request):
     else:
         return HttpResponseRedirect('/splash')
 
+##Class based view for creating a post
+class PostCreateView(LoginRequiredMixin, CreateView):
+    form_class = UpdatePostForm
+    model = Post
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('my-profile')
 
 #Generic class view that querys and shows all posts from logged in user
 class PostListView(LoginRequiredMixin, ListView):
     model = Post
     template_name ='foodBookApp/profile.html' #<app>/</model>_<viewtype>.html
     context_object_name = 'posts'
+    paginate_by = 10
 
     def get_queryset(self):
         return Post.objects.filter(user=self.request.user).order_by('-datePosted')
 
 #generic class based view/form that allows user to update body and tags to a post, validates that the post belongs to user and will  update
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    form_class = UpdatePostForm
     model = Post
-    fields = ['body', 'tags']
 
     def test_func(self):
         post = self.get_object()
@@ -136,9 +186,11 @@ class ProfileListView(LoginRequiredMixin, ListView):
     model = Profile
     template_name = 'foodBookApp/profile-list.html'
     context_object_name = 'qs'
+    paginate_by = 10
 
     def get_queryset(self):
-        qs = Profile.objects.get_all_profiles(self.request.user)
+        # qs = Profile.objects.get_all_profiles(self.request.user)
+        qs = Profile.objects.all()
         return qs
 
     def get_context_data(self, **kwargs):

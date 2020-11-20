@@ -14,7 +14,8 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django import urls
+from django.urls import path, include, re_path
 from foodBookApp import views as food_book_views
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
@@ -54,10 +55,15 @@ urlpatterns = [
     path('post/',food_book_views.PostCreateView.as_view(),name='new-post'),
     path('post/<int:pk>/', food_book_views.PostDetailView.as_view(),name='view-post'),    
     path('post/<int:pk>/update', food_book_views.PostUpdateView.as_view(),name='edit-post'),
-    path('post/<int:pk>/delete', food_book_views.PostDeleteView.as_view(),name='delete-post')
+    path('post/<int:pk>/delete', food_book_views.PostDeleteView.as_view(),name='delete-post'),
 
+    path('search/', food_book_views.SearchListView.as_view(), name='search'),
 
-
+    re_path(
+        r'^tags-autocomplete/$',
+        food_book_views.TagsAutocompleteFromList.as_view(),
+        name='tags-autocomplete',
+    ),
 ]
 
 #FOR HOSTING MEDIA FILES WHILE IN DVELOPMENT WILL NEED TO CHANGE ON DEPLOYMENT

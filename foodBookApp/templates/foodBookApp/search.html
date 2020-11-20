@@ -1,0 +1,33 @@
+{% extends 'foodBookApp/base.html' %}
+
+{% block content %}
+
+{% if profiles.count > 0 %}
+    Found {{ profiles.count }} profiles:
+{% endif %}
+
+<h2>Profiles:</h2>
+{% for obj in profiles %}
+    {% if obj %}
+        {% include 'foodBookApp/snippets/profile_block.html' %}
+        <!-- {{ obj.user.username }} -->
+    {% endif %}
+{% empty %}
+    No matching usernames
+{% endfor %}
+
+{% if posts.count > 0 %}
+    Found {{ posts.count }} posts:
+{% endif %}
+
+<h2>Posts:</h2>
+{% for post in posts %}
+    {% if post %}
+        {% include 'foodBookApp/snippets/post_block.html' %}
+        <!-- {{ obj.user.username }} -->
+    {% endif %}
+{% empty %}
+    No matching post tags
+{% endfor %}
+
+{% endblock %}
