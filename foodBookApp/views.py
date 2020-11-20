@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Post, Profile, Relationship
+from .models import Post, Profile, Relationship, Comment
 from django.contrib.auth.models import User
 from taggit.models import Tag
 from django.db.models import Q
@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponse, JsonResponse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from . forms import AddPostForm,UserRegistrationForm,ProfileUpdateForm
+from . forms import AddPostForm,UserRegistrationForm,ProfileUpdateForm,AddCommentForm
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -111,6 +111,37 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 class PostDetailView(DetailView):
     model = Post
 
+def post(request, pk):
+    post = Post.objects.get(id=pk)
+    comments = Comment.objects.filter(post=post)
+    total_comments = Comment.objects.filter(post=post).count()
+
+    new_comment = None
+
+    if request.method == 'POST':
+        c_form = AddCommentForm(data=request.POST)
+
+        if c_form.is_valid:
+           new_comment = c_form.save(commit=False)
+           new_comment.post = post
+           new_comment.user = request.user
+           new_comment.save()
+           post.total_comments = Comment.objects.filter(post=post).count()
+           post.save()
+           messages.success(request, f'Comment added')
+           return redirect(request.META.get('HTTP_REFERER'))
+    else:
+        c_form=AddCommentForm()
+
+
+    context={
+        'post': post,
+        'comments': comments,
+        'c_form': c_form,
+        'total_comments': total_comments
+    }
+
+    return render(request, 'foodBookApp/post_detail.html', context)
 
 #profile function based view that takes in username and allows another user to view that profile
 def profile(request, username):
@@ -269,15 +300,25 @@ def get_main_feed(request):
 ## function for when a user likes a post currrently just reload page
 @login_required
 def like(request, pk):
+    user = request.user
+    profile = Profile.objects.get(user=user)
     post = Post.objects.get(id = pk)
-    
+
     if(post):
-        post.likes.add(request.user)
-        
-    else:
-        task.complete = True
+        if user in post.likes.all():
+            post.likes.remove(user)
+            label = 'Like'
+        else:
+            post.likes.add(user)
+            label = 'Unlike'
+
     
-    return redirect(request.META.get('HTTP_REFERER'))
+    data = {
+        'likes': post.likes.all().count(),
+        'label': label
+    }
+
+    return JsonResponse(data, safe=False)
 
 
 
