@@ -57,6 +57,8 @@ urlpatterns = [
     path('post/<int:pk>/update', food_book_views.PostUpdateView.as_view(),name='edit-post'),
     path('post/<int:pk>/delete', food_book_views.PostDeleteView.as_view(),name='delete-post'),
 
+    path('convos/', include('conversations.urls')),
+
     path('search/', food_book_views.SearchListView.as_view(), name='search'),
 
     re_path(

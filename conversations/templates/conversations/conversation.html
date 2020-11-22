@@ -1,0 +1,41 @@
+{% extends "foodBookApp/base.html" %}
+
+{% block content %}
+
+<!-- <h2 class="text-center">Conversation</h2>  -->
+
+<div class="container-fluid">
+    <a href="{% url 'delete-convo' pk %}">
+        <button type="button" class="btn btn-danger">
+            Delete
+        </button> 
+    </a>
+    <div class="d-flex justify-content-center">
+        <div class="d-flex flex-column justify-content-center">
+            <form action="" method="post">
+                {% csrf_token %}
+                Participants: 
+                {% for user in form.initial.receiver %}
+                    [{{ user.username }}] 
+                {% endfor %}
+                <table>
+                {{ form.as_table }}
+                {{ form.errors }}
+                {{ form.non_field_errors }}
+                </table>
+                <input type="submit" value="Submit" class="btn">
+            </form>
+            {% if messages %}
+                {% for msg in messages %}
+                    <div class="p-1 mb-1 bg-info text-white" style="width: 400px">
+                        {{ msg }}
+                    </div>
+                {% endfor %}
+            {% else %}
+                There are no messages
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
