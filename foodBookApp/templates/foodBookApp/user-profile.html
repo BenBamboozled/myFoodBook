@@ -4,19 +4,19 @@
 <div class="post d-flex flex-column align-items-center">
     <div class="profile-body d-flex flex-column align-items-center">
         <div class="profile-header d-flex flex-column align-items-center">
-            <img src="{{ user.profile.profilePic.url }}" class="mt-1" id="profile-pic" height="100rem" width="100rem"/>
-            <p>{{ user.username }}</p>
+            <img src="{{ profile.profilePic.url }}" class="mt-1" id="profile-pic" height="100rem" width="100rem"/>
+            <p>{{ profile.user.username }}</p>
             
             <div class="d-flex flex-row align-items-center">
 
-                {% if user not in rel_receiver and obj.user not in rel_sender %}
+                {% if profile.user not in rel_receiver and obj.user not in rel_sender %}
                         <form action="{%url 'send-invite'%}" method="POST">
                             {% csrf_token %}
-                            <input type="hidden" name="profile_pk" value={{user.id}}>
+                            <input type="hidden" name="profile_pk" value={{ profile.user.id }}>
                             
                             <a href="#" class="profile-buttons d-flex flex-column align-items-center">
 
-                                <i class="far fa-user mt-2" job="add-friend" value="{{user.id}}" sender="{{viewer.id}}" id="add-button"></i>
+                                <i class="far fa-user mt-2" job="add-friend" value="{{ profile.user.id }}" sender="{{viewer.id}}" id="add-button"></i>
             
                                 <p>Add</p>
             
@@ -26,36 +26,47 @@
                 {%endif%}
 
 
-
+            {% if viewer.username != profile.user.username %}
                 <a href="#" class="profile-buttons d-flex flex-column align-items-center">
-
-                    <i class="far fa-user mt-2" job="add-friend" value="{{user.id}}" sender="{{viewer.id}}" id="add-button"></i>
-
+                    <i class="far fa-user mt-2" job="add-friend" value="{{ profile.user.id }}" sender="{{viewer.id}}" id="add-button"></i>
                     <p>Add</p>
-
                 </a>
               
-                <a href="{% url 'new-user-convo' user.username %}" class="profile-buttons d-flex flex-column align-items-center">
+                <a href="{% url 'new-user-convo' profile.user.username %}" class="profile-buttons d-flex flex-column align-items-center">
                     <i class="far fa-envelope mt-2"></i>
-
-
                     <p>Message</p>
-
                 </a>
 
                 <a href="#" class="profile-buttons d-flex flex-column align-items-center">
                     <i class="fas fa-user-friends mt-2"></i>
-
                     <p>Friends</p>
-
                 </a>
 
                 <a href="#" class="profile-buttons d-flex flex-column align-items-center">
                     <i class="fas fa-image mt-2"></i>
-
                     <p>Photos</p>
-
                 </a>
+            {% else %}
+                <a href="{% url 'new-post' %}" class="profile-buttons d-flex flex-column align-items-center">
+                    <i class="fas fa-pen mt-2"></i>
+                    <p>Post</p>
+                </a>
+            
+                <a href="{% url 'edit-profile' %}" class="profile-buttons d-flex flex-column align-items-center">
+                    <i class="far fa-user mt-2"></i>
+                    <p>Edit</p>
+                </a>
+
+                <a href="{% url 'my-friends' %}" class="profile-buttons d-flex flex-column align-items-center">
+                    <i class="fas fa-user-friends mt-2"></i>
+                    <p>Friends</p>
+                </a>
+
+                <a href="#" class="profile-buttons d-flex flex-column align-items-center">
+                    <i class="fas fa-image mt-2"></i>
+                    <p>Photos</p>
+                </a>
+            {% endif %}
            
 
             </div>
@@ -63,9 +74,9 @@
 
         </div>
         
-        {% if user.profile.bio %}
+        {% if profile.bio %}
         Bio
-        <p style="color:black;">{{ user.profile.bio }}</p>
+        <p style="color:black;">{{ profile.bio }}</p>
         
         {% endif %}
         
@@ -79,78 +90,7 @@
 
    
     {% for post in posts reversed %}
-
-                     <!-- Start Post -->
-         
-                     <div class="post d-flex flex-column align-items-center ">
-                        <div class="post-header d-flex flex-row justify-content-between">
-                            <div class="d-flex flex-row">
-                                <img src="{{ user.profile.profilePic.url }}" class="m-1" id="profile-pic" height="32px"/> 
-                                <a href="{% url 'my-profile' %}" class="mt-1">{{ user.username }}</a>
-    
-                            </div>
-                          
-                          
-                        </div>
-                         
-                        <div class="post-body">
-                           <p class="ml-1">{{ post.body }}</p>
-
-                           {% if post.image %}
-                           <img src="{{ post.image.url }}" />
-                           
-                           {% endif %}
-                           
-                        <div class="d-flex justify-content-center">
-                        <div class="social-buttons pb-2 d-flex justify-content-center">
-                            <form action="{% url 'like-post' post.pk %}"  method="POST">
-                                {% csrf_token %}
-                                <button type="submit", class="btn-success btn-sm pl-4 pr-4" >
-                                    
-                                    <i class="far fa-thumbs-up" job="like" name="post_id" ,value="{{ post.id}}">{{post.total_likes}}</i>
-                                    <p class="social-labels">Like</p>
-                                </button>
-                            </form>
-
-                            <form action="{% url 'view-post' post.pk %}"  method="GET">
-                                {% csrf_token %}
-                                <button type="submit", class="btn-seconday btn-sm " >
-                                    
-                                    <i class="fas fa-comment " job="comment" post-id=" ">2</i>
-                              <p class="social-labels">Comment</p>
-                                </button>
-                            </form>
-
-                            <form action="{% url 'like-post' post.pk %}"  method="POST">
-                                {% csrf_token %}
-                                <button type="submit", class="btn-info btn-sm btn-sm pl-4 pr-4" >
-                                    
-                                    <i class="fas fa-share-alt " job="share" post-id=" "></i>
-                                    <p class="social-labels ">Share</p>
-                                </button>
-                            </form>
-                              
-                          
-                        </div>
-
-                        </div>
-                    
-                    
-
-                    
-                      </div>
-                      
-                    
-                     </div>
-
-                     <!-- END POST -->
-       
-        
-
-
-
-
-
+        {% include 'foodBookApp/snippets/post_block.html' %}
     {% endfor %}
     {% endif %}
 </div>

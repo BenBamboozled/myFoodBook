@@ -9,58 +9,6 @@
     {% for obj in qs %}
         {% include 'foodBookApp/snippets/profile_block.html' %}
 
-    <!-- <div class="container-fluid">
-        <div class="post d-flex justify-content-center">
-            <div class="profile-body d-flex flex-column justify-content-center mb-2">
-                <div class="d-flex justify-content-center">
-                    <img class="ui small circular image" src={{obj.profilePic.url}}>
-                </div>
-                <h3 class="text-center">{{obj.user.username}}</h3>
-                
-                        <div d-flex flex-column  >
-                            <p class="text-center" style="color: black;">{{obj.bio}}</p>
-                        
-                        
-
-                        <div class="d-flex flex-row justify-content-center">
-                            <a href="/profile/{{obj.user.username}}">
-                                <button class="btn btn-sm form-button ml-2 mb-2">See profile</button>
-                            </a>
-
-                        {% if obj.user not in rel_receiver and obj.user not in rel_sender %}
-                        <form action="{%url 'send-invite'%}" method="POST">
-                            {% csrf_token %}
-                            <input type="hidden" name="profile_pk" value={{obj.pk}}>
-                            
-                            <button class="btn btn-sm btn-success ml-2 mb-2">Add Friend</button>
-                            
-                        </form>
-                        {%endif%}
-
-                        {% if obj.user in rel_receiver and request.user not in obj.friends.all %}
-                            <button class="btn btn-sm btn-secondary ml-2 mb-2" >Awaiting response</button>
-                        
-                        {% endif %}
-
-                        {% if request.user in obj.friends.all %}
-                        <form action="{%url 'remove-friend' %}" method="POST">
-                            {% csrf_token %}
-                            <input type="hidden" name="profile_pk" value={{obj.pk}}>
-                            <button class="btn btn-sm btn-danger ml-2 mb-2" >Remove Friend</button>
-                        </form> 
-                        {% endif %}
-
-                    </div>
-
-                    
-
-                </div>
-                
-
-            </div>
-        </div>
-    </div> -->
-
     {% endfor %}
 
 {% endblock content %}

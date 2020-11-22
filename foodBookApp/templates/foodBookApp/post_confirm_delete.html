@@ -11,23 +11,24 @@
                 </fieldset>
                 <div class="form-group">
                     <button class="btn btn-outline-danger" type="submit">Yes, Delete</button>
-                    <a class="btn btn-outline-secondary" href="{% url 'my-profile' %}">No </a>
+                    <a class="btn btn-outline-secondary" href="{% url 'user-profile' user.username %}">No </a>
                 </div>
             </form>
         </div>
 
 
         <div class="user-feed">
+            {% include 'foodBookApp/snippets/post_block.html' %}
 
    
         
                              <!-- Start Post -->
                  
-                             <div class="post d-flex flex-column align-items-center ">
+                             <!-- <div class="post d-flex flex-column align-items-center ">
                                 <div class="post-header d-flex flex-row justify-content-between">
                                     <div class="d-flex flex-row">
                                         <img src="{{ user.profile.profilePic.url }}" class="m-1" id="profile-pic" height="32px"/> 
-                                        <a href="{% url 'my-profile' %}" class="mt-1">{{ user.username }}</a>
+                                        <a href="{% url 'user-profile' user.username %}" class="mt-1">{{ user.username }}</a>
             
                                     </div>
                                   
@@ -78,7 +79,7 @@
                               </div>
                               
                             
-                            </div>
+                            </div> -->
         </div>
 
 {% endblock content %}
