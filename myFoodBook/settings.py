@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'foodBookApp.apps.FoodbookappConfig',
+    'conversations.apps.ConversationsConfig',
     'crispy_forms',
     'taggit'
 ]

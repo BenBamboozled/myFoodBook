@@ -1,0 +1,14 @@
+{% extends "foodBookApp/base.html" %}
+
+{% block content %}
+
+<h1>Delete Conversation</h1>
+
+<p>All messages in conversation will be deleted. Are you sure you want to delete the conversation?</p>
+
+<form action="" method="POST">
+  {% csrf_token %}
+  <input type="submit" class="btn btn-danger" value="Yes, delete.">
+</form>
+
+{% endblock %}
