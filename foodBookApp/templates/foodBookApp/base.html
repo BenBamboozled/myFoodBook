@@ -78,7 +78,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{% url 'convos' %}">
                   <i class="fas fa-envelope"></i>
                   Messages
                 </a>
@@ -100,6 +100,24 @@
     <div class="container-fluid ">
         <div class="feed" >
             {% block content %} {% endblock content%}
+            
+            {% block pagination %}
+            {% if is_paginated %}
+              <div class="pagination">
+                  <span class="page-links">
+                      {% if page_obj.has_previous %}
+                          <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
+                      {% endif %}
+                      <span class="page-current">
+                          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                      </span>
+                      {% if page_obj.has_next %}
+                          <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
+                      {% endif %}
+                  </span>
+              </div>
+            {% endif %}
+          {% endblock %} 
         </div>
     </div>
 

@@ -1,0 +1,28 @@
+{% extends "foodBookApp/base.html" %}
+
+{% block content %}
+<h2 class="text-center">Conversations</h2> 
+    <div class="container-fluid">
+        <div class="d-flex justify-content-center">
+            <div class="d-flex flex-column justify-content-center">
+                <a href="{% url 'new-convo' %}">
+                    <i class="fas fa-envelope"></i>
+                    New Conversation
+                </a>
+                {% if convos %}
+                    {% for convo in convos.all %}
+                        <a href="{{ convo.get_absolute_url }}">
+                            <button type="button" class="btn btn-outline-secondary" style="width:100%;">
+                            {% for partic in convo.participants.all %}
+                                [{{ partic.username }}] 
+                            {% endfor %}
+                        </button> 
+                        </a>
+                    {% endfor %}
+                {% else %}
+                    There are no conversations.
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
