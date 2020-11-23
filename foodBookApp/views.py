@@ -405,7 +405,7 @@ def get_main_feed(request):
 
     return render(request, 'foodBookApp/main-feed.html', context)
 
-## function for when a user likes a post currrently just reload page
+## function for when a user likes a post
 @login_required
 def like(request, pk):
     user = request.user
@@ -425,6 +425,15 @@ def like(request, pk):
         'likes': post.likes.all().count(),
         'label': label
     }
+
+    if not request.user.is_authenticated:
+        error = "Must be logged in"
+        data = {
+        'likes': post.likes.all().count(),
+        'label': label,
+        'error': error
+        }
+        return JsonResponse(data, safe=False)
 
     return JsonResponse(data, safe=False)
 
