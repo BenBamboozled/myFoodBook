@@ -63,9 +63,9 @@
 
         </div>
         
-        {% if user.profile.bio %}
+        {% if profile.bio %}
         Bio
-        <p style="color:black;">{{ user.profile.bio }}</p>
+        <p style="color:black;">{{ profile.bio }}</p>
         
         {% endif %}
         
@@ -94,6 +94,7 @@
                     <a href="/profile/{{friend}}">
                         <button class="btn btn-sm form-button">See profile</button>
                     </a>
+
 
             </div>
            

@@ -4,8 +4,8 @@
 <div class="post d-flex flex-column align-items-center">
     <div class="profile-body d-flex flex-column align-items-center">
         <div class="profile-header d-flex flex-column align-items-center">
-            <img src="{{ user.profile.profilePic.url }}" class="mt-1" id="profile-pic" height="100rem" width="100rem"/>
-            <p>{{ user.username }}</p>
+            <img src="{{ profile.user.profile.profilePic.url }}" class="mt-1" id="profile-pic" height="100rem" width="100rem"/>
+            <p>{{ profile.user.username }}</p>
             
             <div class="d-flex flex-row align-items-center">
 
@@ -63,9 +63,9 @@
 
         </div>
         
-        {% if user.profile.bio %}
+        {% if profile.bio %}
         Bio
-        <p style="color:black;">{{ user.profile.bio }}</p>
+        <p style="color:black;">{{ profile.bio }}</p>
         
         {% endif %}
         

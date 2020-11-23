@@ -194,7 +194,7 @@ def profile(request, username):
     viewer = Profile.objects.get(user=request.user)
     user = User.objects.get(username=request.user)
     if not user:
-        return redirect('my-profile')
+        return redirect('profile')
     
     profile = Profile.objects.get(user=user)
     user_profile = Profile.objects.get(user=request.user)
@@ -223,7 +223,7 @@ def profile(request, username):
     }
 
     return render(request, 'foodBookApp/user-profile.html', context)
-    
+
 def photos(request, username):
     viewer = Profile.objects.get(user=request.user)
     user = User.objects.get(username=username)
