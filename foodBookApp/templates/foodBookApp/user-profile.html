@@ -9,40 +9,49 @@
             
             <div class="d-flex flex-row align-items-center">
 
-                {% if profile.user not in rel_receiver and obj.user not in rel_sender %}
-                        <form action="{%url 'send-invite'%}" method="POST">
-                            {% csrf_token %}
-                            <input type="hidden" name="profile_pk" value={{ profile.user.id }}>
-                            
-                            <a href="#" class="profile-buttons d-flex flex-column align-items-center">
+            {% if request.user.username != profile.user.username %}
+                {% if profile.user in rel_receiver and request.user not in profile.friends.all %}
+                <button class="profile-buttons d-flex flex-column align-items-center">
+                        
+                    <p><i class="far fa-user mt-2 mb-0"></i>Awaiting</p>
+                </button>
+                {%else%}
+                
 
-                                <i class="far fa-user mt-2" job="add-friend" value="{{ profile.user.id }}" sender="{{viewer.id}}" id="add-button"></i>
-            
-                                <p>Add</p>
-            
-                            </a>
-                            
-                        </form>
+                {% if request.user in profile.friends.all %}
+                <form action="{%url 'remove-friend' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="profile_pk" value={{profile.id}}>
+                    <button class="profile-buttons d-flex flex-column align-items-center" style="background-color: red;">
+                        
+                        <p><i class="far fa-user mt-2 mb-0"></i>Remove</p>
+                    </button>
+                </form> 
+                {% else %}
+                {% if request.user not in rel_receiver and request.user not in rel_sender %}
+                <form action="{%url 'send-invite'%}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="profile_pk" value={{profile.id}}>
+                        <button class="profile-buttons d-flex flex-column align-items-center" style="background-color: green;">
+                        
+                            <p><i class="far fa-user mt-2 mb-0"></i><br>Add</p>
+                        </button>
+                </form>
                 {%endif%}
-
-
-            {% if viewer.username != profile.user.username %}
-                <a href="#" class="profile-buttons d-flex flex-column align-items-center">
-                    <i class="far fa-user mt-2" job="add-friend" value="{{ profile.user.id }}" sender="{{viewer.id}}" id="add-button"></i>
-                    <p>Add</p>
-                </a>
+                {% endif %}
+                {% endif %}
               
                 <a href="{% url 'new-user-convo' profile.user.username %}" class="profile-buttons d-flex flex-column align-items-center">
                     <i class="far fa-envelope mt-2"></i>
                     <p>Message</p>
                 </a>
 
-                <a href="#" class="profile-buttons d-flex flex-column align-items-center">
+                <a href="{% url 'user-friends' profile.user.username %}" class="profile-buttons d-flex flex-column align-items-center">
                     <i class="fas fa-user-friends mt-2"></i>
                     <p>Friends</p>
                 </a>
 
-                <a href="#" class="profile-buttons d-flex flex-column align-items-center">
+                <a href="{% url 'user-photos' user.username %}" class="profile-buttons d-flex flex-column align-items-center">
                     <i class="fas fa-image mt-2"></i>
                     <p>Photos</p>
                 </a>
@@ -62,7 +71,7 @@
                     <p>Friends</p>
                 </a>
 
-                <a href="#" class="profile-buttons d-flex flex-column align-items-center">
+                <a href="{% url 'my-photos' %}" class="profile-buttons d-flex flex-column align-items-center">
                     <i class="fas fa-image mt-2"></i>
                     <p>Photos</p>
                 </a>
@@ -97,4 +106,3 @@
 
 
 {% endblock %}
-

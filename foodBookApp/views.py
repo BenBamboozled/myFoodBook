@@ -11,8 +11,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from .models import Post, Profile, Relationship
-from .forms import UpdatePostForm, UserRegistrationForm, ProfileUpdateForm, SearchForm
+from .models import Post, Profile, Relationship, Comment
+from .forms import UpdatePostForm, UserRegistrationForm, ProfileUpdateForm, SearchForm, AddCommentForm
 
 from dal import autocomplete
 from taggit.models import Tag
@@ -125,9 +125,31 @@ class ProfilePostListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ProfilePostListView, self).get_context_data()
+
+        rel_receiver = []
+        rel_sender = []
+
+        if self.request.user.is_authenticated:
+            user = User.objects.get(username=self.request.user)
+            profile = Profile.objects.get(user=user)
+            rel_r = Relationship.objects.filter(sender=profile)
+            rel_s = Relationship.objects.filter(receiver=profile)
+            for item in rel_r:
+                rel_receiver.append(item.receiver.user)
+            for item in rel_s:
+                rel_sender.append(item.sender.user)
+        
         user = User.objects.get(username=self.kwargs.get('username'))
         profile = Profile.objects.get(user=user)
-        context['viewer'] = self.request.user
+        posts = Post.objects.filter(user=user)
+
+        context["rel_receiver"] = rel_receiver
+        context["rel_sender"] = rel_sender
+        context['is_empty'] = False
+        if len(self.get_queryset()) == 0:
+            context['is_empty'] = True
+        context['user'] = user
+
         context['profile'] = profile
         return context
 
@@ -181,33 +203,69 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 class PostDetailView(DetailView):
     model = Post
 
+def post(request, pk):
+    post = Post.objects.get(id=pk)
+    comments = Comment.objects.filter(post=post)
+    total_comments = Comment.objects.filter(post=post).count()
 
-#profile function based view that takes in username and allows another user to view that profile
-# def profile(request, username):
-#     viewer = request.user
-#     user = User.objects.get(username=username)
-#     if not user:
-#         return redirect('user-profile', kwargs={'username':request.user.username})
+    new_comment = None
+
+    if request.method == 'POST':
+        c_form = AddCommentForm(data=request.POST)
+
+        if c_form.is_valid:
+           new_comment = c_form.save(commit=False)
+           new_comment.post = post
+           new_comment.user = request.user
+           new_comment.save()
+           post.total_comments = Comment.objects.filter(post=post).count()
+           post.save()
+           messages.success(request, f'Comment added')
+           return redirect(request.META.get('HTTP_REFERER'))
+    else:
+        c_form=AddCommentForm()
+
+
+    context={
+        'post': post,
+        'comments': comments,
+        'c_form': c_form,
+        'total_comments': total_comments
+    }
+
+    return render(request, 'foodBookApp/post_detail.html', context)
+
+
+def photos(request, username):
+    user = User.objects.get(username=username)
+    if not user:
+        return redirect('user-profile', kwargs={'username':request.user.username})
     
-#     profile = Profile.objects.get(user=user)
-#     qs = Post.objects.filter(user=user).order_by('datePosted')
-#     page = request.GET.get('page', 1)
-#     paginator = Paginator(qs, 5)
-#     try:
-#         posts = paginator.page(page)
-#     except PageNotAnInteger:
-#         posts = paginator.page(1)
-#     except EmptyPage:
-#         posts = paginator.page(paginator.num_pages)
+    profile = Profile.objects.get(user=user)
+    posts = Post.objects.filter(user=user)
 
-#     context={
-#         'viewer': viewer,
-#         'profile': profile,
-#         'posts': posts,
-#         'page_obj': posts,
-#     }
+    context={
+        'username': username,
+        # 'user': user,
+        'profile': profile,
+        'posts': posts
+    }
 
-#     return render(request, 'foodBookApp/user-profile.html', context)
+    return render(request, 'foodBookApp/user-photos.html', context)
+
+@login_required
+def my_photos(request):
+    profile = Profile.objects.get(user=request.user)
+
+    posts = Post.objects.filter(user=request.user)
+
+    context={
+        'profile': profile,
+        'posts': posts
+    }
+
+    return render(request, 'foodBookApp/photos.html', context)
+
 
 class ProfileListView(LoginRequiredMixin, ListView):
     model = Profile
@@ -246,8 +304,11 @@ def friends(request):
     context = {'profile':profile}
     return render(request,'foodBookApp/friends.html',context)
 
-
-
+def user_friends(request, username):    
+    user = User.objects.get(username=username)
+    profile = Profile.objects.get(user=user)
+    context = {'profile':profile}
+    return render(request,'foodBookApp/user-friends.html',context)
 
 @login_required
 def invites_view(request):
@@ -344,18 +405,37 @@ def get_main_feed(request):
 
     return render(request, 'foodBookApp/main-feed.html', context)
 
-## function for when a user likes a post currrently just reload page
+## function for when a user likes a post
 @login_required
 def like(request, pk):
+    user = request.user
+    profile = Profile.objects.get(user=user)
     post = Post.objects.get(id = pk)
-    
+
     if(post):
-        post.likes.add(request.user)
-        
-    else:
-        task.complete = True
+        if user in post.likes.all():
+            post.likes.remove(user)
+            label = 'Like'
+        else:
+            post.likes.add(user)
+            label = 'Unlike'
+
     
-    return redirect(request.META.get('HTTP_REFERER'))
+    data = {
+        'likes': post.likes.all().count(),
+        'label': label
+    }
+
+    if not request.user.is_authenticated:
+        error = "Must be logged in"
+        data = {
+        'likes': post.likes.all().count(),
+        'label': label,
+        'error': error
+        }
+        return JsonResponse(data, safe=False)
+
+    return JsonResponse(data, safe=False)
 
 @login_required
 def user_settings(request):

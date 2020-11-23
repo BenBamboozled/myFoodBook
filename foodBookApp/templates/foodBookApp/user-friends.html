@@ -1,0 +1,84 @@
+{% extends "foodBookApp/base.html"%}
+
+{% block content %}
+<div class="post d-flex flex-column align-items-center">
+    <div class="profile-body d-flex flex-column align-items-center">
+        <div class="profile-header d-flex flex-column align-items-center">
+            <img src="{{ profile.user.profile.profilePic.url }}" class="mt-1" id="profile-pic" height="100rem" width="100rem"/>
+            <p>{{ profile.user.username }}</p>
+            
+            <div class="d-flex flex-row align-items-center">
+
+              
+                <a href="{% url 'new-user-convo' profile.user.username %}" class="profile-buttons d-flex flex-column align-items-center">
+                    <i class="far fa-envelope mt-2"></i>
+
+
+                    <p>Message</p>
+
+                </a>
+
+                <a href="{% url 'user-friends' profile.user.username %}" class="profile-buttons d-flex flex-column align-items-center">
+                    <i class="fas fa-user-friends mt-2"></i>
+
+                    <p>Friends</p>
+
+                </a>
+
+                <a href="{% url 'user-photos' profile.user.username %}" class="profile-buttons d-flex flex-column align-items-center">
+                    <i class="fas fa-image mt-2"></i>
+
+                    <p>Photos</p>
+
+                </a>
+           
+
+            </div>
+            
+
+        </div>
+        
+        {% if profile.bio %}
+        Bio
+        <p style="color:black;">{{ profile.bio }}</p>
+        
+        {% endif %}
+        
+    </div>
+
+
+    <h3 style="color:#1ebea5;">Friends</h3>
+</div>
+{% if is_empty %}
+<h1>No friends..</h1>
+{% endif %}
+
+{% for friend in profile.get_friends %}
+<div class="container-fluid">
+    <div class="post d-flex justify-content-center">
+        <div class="profile-body d-flex flex-column justify-content-center mb-2">
+
+            <img src={{friend.profilePic.url}}></img>
+
+
+            <h3 class="text-center">{{friend}}</h3>
+
+            <div class="d-flex justify-content-center">
+
+                <div class="d-flex flex-row mb-2" class="ml-2">
+                    <a href="/profile/{{friend}}">
+                        <button class="btn btn-sm form-button">See profile</button>
+                    </a>
+
+
+            </div>
+           
+
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}

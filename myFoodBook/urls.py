@@ -45,8 +45,11 @@ urlpatterns = [
     path('explore/users', food_book_views.ProfileListView.as_view(),name='explore-users'),
     path('profile-edit',food_book_views.ProfileUpdateView.as_view(),name='edit-profile'),
     path('profile/<str:username>', food_book_views.ProfilePostListView.as_view(),name='user-profile'),
+    path('profile/<str:username>/photos', food_book_views.photos,name='user-photos'),
+    path('profile/<str:username>/friends', food_book_views.user_friends,name='user-friends'),
     path('settings/', food_book_views.user_settings, name='user-settings'),
 
+    path('photos/', food_book_views.my_photos,name='my-photos'),
     path('friends/', food_book_views.friends,name='my-friends'),
     path('invite/accept', food_book_views.accept_invatation,name='accept-invite'),
     path('invite/reject', food_book_views.reject_invatation,name='reject-invite'),
@@ -59,7 +62,7 @@ urlpatterns = [
     path('my-invites/', food_book_views.invites_view, name='my-invites'),
 
     path('post/',food_book_views.PostCreateView.as_view(),name='new-post'),
-    path('post/<int:pk>/', food_book_views.PostDetailView.as_view(),name='view-post'),    
+    path('post/<int:pk>/', food_book_views.post,name='view-post'),    
     path('post/<int:pk>/update', food_book_views.PostUpdateView.as_view(),name='edit-post'),
     path('post/<int:pk>/delete', food_book_views.PostDeleteView.as_view(),name='delete-post'),
 

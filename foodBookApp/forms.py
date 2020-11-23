@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import Post,  Profile
+from .models import Post,  Profile, Comment
 from dal import autocomplete
 
 class UserRegistrationForm(UserCreationForm):
@@ -36,6 +36,11 @@ class UpdatePostForm(forms.ModelForm):
 class SearchForm(forms.Form):
     query = autocomplete.TaggitSelect2(url='tags-autocomplete')
 
+
+class AddCommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['body']
 
 
 

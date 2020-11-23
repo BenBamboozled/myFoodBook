@@ -1,0 +1,74 @@
+{% extends "foodBookApp/base.html"%}
+
+{% block content %}
+<div class="post d-flex flex-column align-items-center">
+    <div class="profile-body d-flex flex-column align-items-center">
+        <div class="profile-header d-flex flex-column align-items-center">
+            <img src="{{ profile.user.profile.profilePic.url }}" class="mt-1" id="profile-pic" height="100rem" width="100rem"/>
+            <p>{{ profile.user.username }}</p>
+            
+            <div class="d-flex flex-row align-items-center">
+
+              {% if user %}
+                <a href="{% url 'new-user-convo' profile.user.username %}" class="profile-buttons d-flex flex-column align-items-center">
+                    <i class="far fa-envelope mt-2"></i>
+
+
+                    <p>Message</p>
+
+                </a>
+             {% endif %}
+
+                <a href="{% url 'user-friends' profile.user.username %}" class="profile-buttons d-flex flex-column align-items-center">
+                    <i class="fas fa-user-friends mt-2"></i>
+
+                    <p>Friends</p>
+
+                </a>
+
+                <a href="{% url 'user-photos' profile.user.username %}" class="profile-buttons d-flex flex-column align-items-center">
+                    <i class="fas fa-image mt-2"></i>
+
+                    <p>Photos</p>
+
+                </a>
+           
+
+            </div>
+            
+
+        </div>
+        
+        {% if profile.bio %}
+        Bio
+        <p style="color:black;">{{ profile.bio }}</p>
+        
+        {% endif %}
+        
+    </div>
+
+
+    <h3 style="color:#1ebea5;">Photos</h3>
+</div>
+    {% if posts %}
+    <div class="user-feed">
+
+
+        {% for post in posts %}
+
+            {% if post.image %}
+            <div class="responsive">
+                <div class="gallery">
+                  <a target="_blank" href="{% url 'view-post' post.pk %}">
+                    <img src="{{ post.image.url }}" width="600" height="400">
+                  </a>
+                  <div class="desc">{{ post.body }}</div>
+                </div>
+            </div>
+            {% endif %}
+
+        {% endfor %}
+    {% endif %}
+    </div>
+
+{% endblock %}
