@@ -8,32 +8,6 @@
             <p>{{ profile.user.username }}</p>
             
             <div class="d-flex flex-row align-items-center">
-
-                {% if user not in rel_receiver and obj.user not in rel_sender %}
-                        <form action="{%url 'send-invite'%}" method="POST">
-                            {% csrf_token %}
-                            <input type="hidden" name="profile_pk" value={{user.id}}>
-                            
-                            <a href="#" class="profile-buttons d-flex flex-column align-items-center">
-
-                                <i class="far fa-user mt-2" job="add-friend" value="{{user.id}}" sender="{{viewer.id}}" id="add-button"></i>
-            
-                                <p>Add</p>
-            
-                            </a>
-                            
-                        </form>
-                {%endif%}
-
-
-
-                <a href="#" class="profile-buttons d-flex flex-column align-items-center">
-
-                    <i class="far fa-user mt-2" job="add-friend" value="{{user.id}}" sender="{{viewer.id}}" id="add-button"></i>
-
-                    <p>Add</p>
-
-                </a>
               
                 <a href="{% url 'new-user-convo' user.username %}" class="profile-buttons d-flex flex-column align-items-center">
                     <i class="far fa-envelope mt-2"></i>
