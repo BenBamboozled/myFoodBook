@@ -196,6 +196,39 @@ def post(request, pk):
 #profile function based view that takes in username and allows another user to view that profile
 def profile(request, username):
     viewer = Profile.objects.get(user=request.user)
+    user = User.objects.get(username=request.user)
+    if not user:
+        return redirect('my-profile')
+    
+    profile = Profile.objects.get(user=user)
+    user_profile = Profile.objects.get(user=request.user)
+
+    rel_r = Relationship.objects.filter(sender=user_profile)
+    rel_s = Relationship.objects.filter(receiver=user_profile)
+    rel_receiver = []
+    rel_sender = []
+    for item in rel_r:
+        rel_receiver.append(item.receiver.user)
+    for item in rel_s:
+        rel_sender.append(item.sender.user)
+    
+    user = User.objects.get(username=username)
+    profile = Profile.objects.get(user=user)
+    posts = Post.objects.filter(user=user)
+
+    context={
+        'viewer': viewer,
+        'username': username,
+        'user': user,
+        'profile': profile,
+        'posts': posts,
+        'rel_receiver': rel_receiver,
+        'rel_sender' : rel_sender
+    }
+
+    return render(request, 'foodBookApp/user-profile.html', context)
+def photos(request, username):
+    viewer = Profile.objects.get(user=request.user)
     user = User.objects.get(username=username)
     if not user:
         return redirect('my-profile')
@@ -211,7 +244,20 @@ def profile(request, username):
         'posts': posts
     }
 
-    return render(request, 'foodBookApp/user-profile.html', context)
+    return render(request, 'foodBookApp/user-photos.html', context)
+
+@login_required
+def my_photos(request):
+    profile = Profile.objects.get(user=request.user)
+
+    posts = Post.objects.filter(user=request.user)
+
+    context={
+        'profile': profile,
+        'posts': posts
+    }
+
+    return render(request, 'foodBookApp/photos.html', context)
 
 class ProfileListView(LoginRequiredMixin, ListView):
     model = Profile
@@ -250,7 +296,12 @@ def friends(request):
     return render(request,'foodBookApp/friends.html',context)
 
 
-
+def user_friends(request, username):
+    viewer = Profile.objects.get(user=request.user)
+    user = User.objects.get(username=username)
+    profile = Profile.objects.get(user=user)
+    context = {'profile':profile,'viewer':viewer}
+    return render(request,'foodBookApp/user-friends.html',context)
 
 @login_required
 def invites_view(request):

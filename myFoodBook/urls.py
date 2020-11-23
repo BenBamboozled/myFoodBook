@@ -40,7 +40,10 @@ urlpatterns = [
     path('explore/users', food_book_views.ProfileListView.as_view(),name='explore-users'),
     path('profile-edit',food_book_views.editProfile,name='edit-profile'),
     path('profile/<str:username>', food_book_views.profile,name='user-profile'),
+    path('profile/<str:username>/photos', food_book_views.photos,name='user-photos'),
+    path('profile/<str:username>/friends', food_book_views.user_friends,name='user-friends'),
 
+    path('photos/', food_book_views.my_photos,name='my-photos'),
     path('friends/', food_book_views.friends,name='my-friends'),
     path('invite/accept', food_book_views.accept_invatation,name='accept-invite'),
     path('invite/reject', food_book_views.reject_invatation,name='reject-invite'),

@@ -9,32 +9,37 @@
             
             <div class="d-flex flex-row align-items-center">
 
-                {% if user not in rel_receiver and obj.user not in rel_sender %}
-                        <form action="{%url 'send-invite'%}" method="POST">
-                            {% csrf_token %}
-                            <input type="hidden" name="profile_pk" value={{user.id}}>
-                            
-                            <a href="#" class="profile-buttons d-flex flex-column align-items-center">
+                {% if profile.user in rel_receiver and viewer.user not in profile.friends.all %}
+                <button class="profile-buttons d-flex flex-column align-items-center">
+                        
+                    <p><i class="far fa-user mt-2 mb-0"></i>Awaiting</p>
+                </button>
+                {%else%}
+                
 
-                                <i class="far fa-user mt-2" job="add-friend" value="{{user.id}}" sender="{{viewer.id}}" id="add-button"></i>
-            
-                                <p>Add</p>
-            
-                            </a>
-                            
-                        </form>
+                {% if viewer.user in profile.friends.all %}
+                <form action="{%url 'remove-friend' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="profile_pk" value={{user.id}}>
+                    <button class="profile-buttons d-flex flex-column align-items-center" style="background-color: red;">
+                        
+                        <p><i class="far fa-user mt-2 mb-0"></i>Remove</p>
+                    </button>
+                </form> 
+                {% else %}
+                {% if viewer.user not in rel_receiver and viewer.user not in rel_sender %}
+                <form action="{%url 'send-invite'%}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="profile_pk" value={{user.id}}>
+                        <button class="profile-buttons d-flex flex-column align-items-center" style="background-color: green;">
+                        
+                            <p><i class="far fa-user mt-2 mb-0"></i>Add</p>
+                        </button>
+                </form>
                 {%endif%}
+                {% endif %}
+                {% endif %}
 
-
-
-                <a href="#" class="profile-buttons d-flex flex-column align-items-center">
-
-                    <i class="far fa-user mt-2" job="add-friend" value="{{user.id}}" sender="{{viewer.id}}" id="add-button"></i>
-
-                    <p>Add</p>
-
-                </a>
-              
                 <a href="{% url 'new-user-convo' user.username %}" class="profile-buttons d-flex flex-column align-items-center">
                     <i class="far fa-envelope mt-2"></i>
 
@@ -43,14 +48,14 @@
 
                 </a>
 
-                <a href="#" class="profile-buttons d-flex flex-column align-items-center">
+                <a href="{% url 'user-friends' profile.user.username %}" class="profile-buttons d-flex flex-column align-items-center">
                     <i class="fas fa-user-friends mt-2"></i>
 
                     <p>Friends</p>
 
                 </a>
 
-                <a href="#" class="profile-buttons d-flex flex-column align-items-center">
+                <a href="{% url 'user-photos' user.username %}" class="profile-buttons d-flex flex-column align-items-center">
                     <i class="fas fa-image mt-2"></i>
 
                     <p>Photos</p>
