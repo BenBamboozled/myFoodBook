@@ -270,7 +270,7 @@ def send_invatation(request):
         rel = Relationship.objects.create(sender=sender, receiver=receiver, status='send')
 
         return redirect(request.META.get('HTTP_REFERER'))
-    return redirect('user-profile', kwargs={'username':self.request.user.username})
+    return redirect('user-profile', kwargs={'username':request.user.username})
 
 ##remove a specified user from the logged in users friends list
 @login_required
