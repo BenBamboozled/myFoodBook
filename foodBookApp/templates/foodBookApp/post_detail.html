@@ -28,7 +28,9 @@
 
         {% endif %}
 
+        
         <div class="container-fluid center-div mt-lg-0 pt-lg-0">
+            {% if request.user.is_authenticated %}
             <div class="form">
                 <form method="POST" class="register-form d-flex flex-column justify-content-center">
                     {% csrf_token %}
@@ -42,6 +44,14 @@
                 </form>
         
             </div>
+            {% else %}
+            <div>
+                <h3 class="text-center">Login/Register up to add a omment</h3>
+                <a class="d-flex justify-content-center" href="{% url 'splash-page' %}" role="button" aria-haspopup="true" aria-expanded="false">
+                    <button class="btn btn-outline-secondary btn-sm">Login/Register</button>
+                  </a>
+            </div>
+            {% endif %}
         </div>
 
       
