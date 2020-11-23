@@ -34,11 +34,18 @@ urlpatterns = [
     path('register/',food_book_views.register,name='register'),
     path('login/',auth_views.LoginView.as_view(template_name='foodBookApp/login.html'), name='login'),
     path('logout/',auth_views.LogoutView.as_view(template_name='foodBookApp/logout.html'), name='logout'),
+    path('change-password/', auth_views.PasswordChangeView.as_view(),name='change-password'),
+    path('reset-password', auth_views.PasswordResetView.as_view(),name='reset-password'),
+    path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(), name='password_change_done'),
+    path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 
     path('main/', food_book_views.get_main_feed,name='main-feed'),
     path('explore/users', food_book_views.ProfileListView.as_view(),name='explore-users'),
     path('profile-edit',food_book_views.editProfile,name='edit-profile'),
-    path('profile/<str:username>', food_book_views.profile,name='user-profile'),
+    path('profile/<str:username>', food_book_views.ProfilePostListView.as_view(),name='user-profile'),
+    path('settings/', food_book_views.user_settings, name='user-settings'),
 
     path('friends/', food_book_views.friends,name='my-friends'),
     path('invite/accept', food_book_views.accept_invatation,name='accept-invite'),
@@ -58,7 +65,7 @@ urlpatterns = [
 
     path('convos/', include('conversations.urls')),
 
-    path('search/', food_book_views.SearchListView.as_view(), name='search'),
+    path('search/', food_book_views.search_results, name='search'),
 
     re_path(
         r'^tags-autocomplete/$',
