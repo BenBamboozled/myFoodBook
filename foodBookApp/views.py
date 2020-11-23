@@ -228,11 +228,6 @@ def post(request, pk):
 
 
 def photos(request, username):
-    if request.user.is_authenticated:
-        viewer = Profile.objects.get(user=request.user)
-    else:
-        viewer = None
-
     user = User.objects.get(username=username)
     if not user:
         return redirect('user-profile', kwargs={'username':request.user.username})
@@ -241,7 +236,6 @@ def photos(request, username):
     posts = Post.objects.filter(user=user)
 
     context={
-        'viewer': viewer,
         'username': username,
         # 'user': user,
         'profile': profile,
@@ -301,16 +295,10 @@ def friends(request):
     context = {'profile':profile}
     return render(request,'foodBookApp/friends.html',context)
 
-
-def user_friends(request, username):
-    if request.user.is_authenticated:
-        viewer = Profile.objects.get(user=request.user)
-    else:
-        viewer = None
-    
+def user_friends(request, username):    
     user = User.objects.get(username=username)
     profile = Profile.objects.get(user=user)
-    context = {'profile':profile,'viewer':viewer}
+    context = {'profile':profile}
     return render(request,'foodBookApp/user-friends.html',context)
 
 @login_required
