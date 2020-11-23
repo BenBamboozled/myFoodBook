@@ -38,7 +38,7 @@
               <img src="{{user.profile.profilePic.url}}" class="img-responsive" height="26px" width="26px"/>
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="/">View profile</a>
+              <a class="dropdown-item" href="{% url 'user-profile' user.username %}">View profile</a>
               <a class="dropdown-item" href="{% url 'edit-profile' %}">Edit profile</a>
               <a class="dropdown-item" href="#">Settings</a>
               <div class="dropdown-divider"></div>

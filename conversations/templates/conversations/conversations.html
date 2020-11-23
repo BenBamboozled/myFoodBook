@@ -12,7 +12,7 @@
                 {% if convos %}
                     {% for convo in convos.all %}
                         <a href="{{ convo.get_absolute_url }}">
-                            <button type="button" class="btn btn-outline-secondary" style="width:100%;">
+                            <button type="button" class="btn btn-outline-secondary btn-block" style="width:100%;">
                             {% for partic in convo.participants.all %}
                                 [{{ partic.username }}] 
                             {% endfor %}
