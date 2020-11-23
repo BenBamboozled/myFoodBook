@@ -86,48 +86,7 @@
 
         </div>
 
-        <h5>Comments({{total_comments}})</h5>
-        {% if comments %}
-        <div class="d-flex flex-column justify-content-center">
-                            
-
-            {% for comment in comments%}
-
-            <div class="comment d-flex mb-1">
-                <img src="{{comment.user.profile.profilePic.url}}" class="m-1">
-                <div class="mt-0">
-                    <a href="/profile/{{ comment.user.username }}" class="mb-0">{{ comment.user.username }}</a>
-                    <p class="m-0">{{ comment.body }}</p>
-                    <small class="m-0">{{ comment.datePosted }}</small>
-
-
-                </div>
-
-            </div>
-
-            {% endfor %}
-        </div>
-
-        {% endif %}
-
-        <div class="container-fluid center-div mt-lg-0 pt-lg-0">
-            <div class="form">
-                <form method="POST" class="register-form d-flex flex-column justify-content-center">
-                    {% csrf_token %}
-                    <fieldset class="form-group">
-                        <legend >Add comment</legend>
-                        {{ c_form|crispy }}
-                    </fieldset>
-                    <div class="form-group">
-                        <button class="btn form-button" type="submit">Add Comment</button>
-                    </div>
-                </form>
         
-            </div>
-        </div>
-
-      
-      </div>
 
   </div>
   
