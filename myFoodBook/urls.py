@@ -36,7 +36,6 @@ urlpatterns = [
     path('logout/',auth_views.LogoutView.as_view(template_name='foodBookApp/logout.html'), name='logout'),
 
     path('main/', food_book_views.get_main_feed,name='main-feed'),
-    path('profile/', food_book_views.PostListView.as_view(),name='my-profile'),
     path('explore/users', food_book_views.ProfileListView.as_view(),name='explore-users'),
     path('profile-edit',food_book_views.editProfile,name='edit-profile'),
     path('profile/<str:username>', food_book_views.profile,name='user-profile'),
@@ -66,7 +65,7 @@ urlpatterns = [
 
     re_path(
         r'^tags-autocomplete/$',
-        food_book_views.TagsAutocompleteFromList.as_view(),
+        food_book_views.TagAutocomplete.as_view(),
         name='tags-autocomplete',
     ),
 ]

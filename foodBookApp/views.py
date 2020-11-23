@@ -60,22 +60,18 @@ class SearchListView(TemplateView):
 # def SearchView():
 
 
-class TagsAutocompleteFromList(autocomplete.Select2ListView):
-    def get_list(self):
-        return ['Diet', 'Healthy', 'Green', 'Low-carb', 'Indulgence', 'Keto']
+# class TagAutocomplete(autocomplete.Select2ListView):
+#     def get_list(self):
+#         return ['Diet', 'Healthy', 'Green', 'Low-carb', 'Indulgence', 'Keto']
 
-# class TagAutocomplete(autocomplete.Select2QuerySetView):
-#     def get_queryset(self):
-#         # Don't forget to filter out results depending on the visitor !
-#         if not self.request.user.is_authenticated():
-#             return Tag.objects.none()
+class TagAutocomplete(LoginRequiredMixin, autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = Tag.objects.all()
 
-#         qs = Tag.objects.all()
+        if self.q:
+            qs = qs.filter(name__istartswith=self.q)
 
-#         if self.q:
-#             qs = qs.filter(name__istartswith=self.q)
-
-#         return qs
+        return qs
 
 ##EditProfile fuinction provides form to allow user to update profile, will validate and update form if valid
 @login_required
@@ -86,7 +82,7 @@ def editProfile(request):
         if p_form.is_valid:
            p_form.save()
            messages.success(request, f'Profile succesfully updated.')
-           return redirect('my-profile')
+           return redirect('user-profile', kwargs={'username':request.user.username})
     else:
         p_form=ProfileUpdateForm(instance=request.user.profile)
 
@@ -105,7 +101,7 @@ def splash(request):
 #home function checks if user is logged in and sends them to correct page
 def home(request):
     if request.user.is_authenticated:
-        return HttpResponseRedirect('/profile')
+        return HttpResponseRedirect('/profile/{}'.format(request.user.username))
 
     else:
         return HttpResponseRedirect('/splash')
@@ -120,12 +116,12 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('my-profile')
+        return reverse('user-profile', kwargs={'username':self.request.user.username})
 
 #Generic class view that querys and shows all posts from logged in user
 class PostListView(LoginRequiredMixin, ListView):
     model = Post
-    template_name ='foodBookApp/profile.html' #<app>/</model>_<viewtype>.html
+    template_name ='foodBookApp/user-profile.html' #<app>/</model>_<viewtype>.html
     context_object_name = 'posts'
     paginate_by = 10
 
@@ -227,11 +223,12 @@ def profile(request, username):
     }
 
     return render(request, 'foodBookApp/user-profile.html', context)
+    
 def photos(request, username):
     viewer = Profile.objects.get(user=request.user)
     user = User.objects.get(username=username)
     if not user:
-        return redirect('my-profile')
+        return redirect('user-profile', kwargs={'username':request.user.username})
     
     profile = Profile.objects.get(user=user)
     posts = Post.objects.filter(user=user)
@@ -239,7 +236,7 @@ def photos(request, username):
     context={
         'viewer': viewer,
         'username': username,
-        'user': user,
+        # 'user': user,
         'profile': profile,
         'posts': posts
     }
@@ -333,7 +330,7 @@ def send_invatation(request):
         rel = Relationship.objects.create(sender=sender, receiver=receiver, status='send')
 
         return redirect(request.META.get('HTTP_REFERER'))
-    return redirect('my-profile')
+    return redirect('user-profile', kwargs={'username':self.request.user.username})
 
 ##remove a specified user from the logged in users friends list
 @login_required

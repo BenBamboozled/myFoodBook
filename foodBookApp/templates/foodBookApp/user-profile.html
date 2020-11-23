@@ -4,11 +4,12 @@
 <div class="post d-flex flex-column align-items-center">
     <div class="profile-body d-flex flex-column align-items-center">
         <div class="profile-header d-flex flex-column align-items-center">
-            <img src="{{ user.profile.profilePic.url }}" class="mt-1" id="profile-pic" height="100rem" width="100rem"/>
-            <p>{{ user.username }}</p>
+            <img src="{{ profile.profilePic.url }}" class="mt-1" id="profile-pic" height="100rem" width="100rem"/>
+            <p>{{ profile.user.username }}</p>
             
             <div class="d-flex flex-row align-items-center">
 
+            {% if viewer.username != profile.user.username %}
                 {% if profile.user in rel_receiver and viewer.user not in profile.friends.all %}
                 <button class="profile-buttons d-flex flex-column align-items-center">
                         
@@ -39,28 +40,42 @@
                 {%endif%}
                 {% endif %}
                 {% endif %}
-
-                <a href="{% url 'new-user-convo' user.username %}" class="profile-buttons d-flex flex-column align-items-center">
+              
+                <a href="{% url 'new-user-convo' profile.user.username %}" class="profile-buttons d-flex flex-column align-items-center">
                     <i class="far fa-envelope mt-2"></i>
-
-
                     <p>Message</p>
-
                 </a>
 
                 <a href="{% url 'user-friends' profile.user.username %}" class="profile-buttons d-flex flex-column align-items-center">
                     <i class="fas fa-user-friends mt-2"></i>
-
                     <p>Friends</p>
-
                 </a>
 
                 <a href="{% url 'user-photos' user.username %}" class="profile-buttons d-flex flex-column align-items-center">
                     <i class="fas fa-image mt-2"></i>
-
                     <p>Photos</p>
-
                 </a>
+            {% else %}
+                <a href="{% url 'new-post' %}" class="profile-buttons d-flex flex-column align-items-center">
+                    <i class="fas fa-pen mt-2"></i>
+                    <p>Post</p>
+                </a>
+            
+                <a href="{% url 'edit-profile' %}" class="profile-buttons d-flex flex-column align-items-center">
+                    <i class="far fa-user mt-2"></i>
+                    <p>Edit</p>
+                </a>
+
+                <a href="{% url 'my-friends' %}" class="profile-buttons d-flex flex-column align-items-center">
+                    <i class="fas fa-user-friends mt-2"></i>
+                    <p>Friends</p>
+                </a>
+
+                <a href="#" class="profile-buttons d-flex flex-column align-items-center">
+                    <i class="fas fa-image mt-2"></i>
+                    <p>Photos</p>
+                </a>
+            {% endif %}
            
 
             </div>
@@ -68,9 +83,9 @@
 
         </div>
         
-        {% if user.profile.bio %}
+        {% if profile.bio %}
         Bio
-        <p style="color:black;">{{ user.profile.bio }}</p>
+        <p style="color:black;">{{ profile.bio }}</p>
         
         {% endif %}
         
@@ -84,87 +99,7 @@
 
    
     {% for post in posts reversed %}
-
-                     <!-- Start Post -->
-         
-                     <div class="post d-flex flex-column align-items-center ">
-                        <div class="post-header d-flex flex-row justify-content-between">
-                            <div class="d-flex flex-row">
-                                <img src="{{ user.profile.profilePic.url }}" class="m-1" id="profile-pic" height="32px"/> 
-                                <a href="{% url 'my-profile' %}" class="mt-1">{{ user.username }}</a>
-    
-                            </div>
-                          
-                          
-                        </div>
-                         
-                        <div class="post-body">
-                           <p class="ml-1">{{ post.body }}</p>
-
-                           {% if post.image %}
-                           <img src="{{ post.image.url }}" />
-                           
-                           {% endif %}
-                           
-                        <div class="d-flex justify-content-center">
-                        <div class="social-buttons pb-2 d-flex justify-content-center">
-                            <form>
-                                {% csrf_token %}
-                            {% if request.user not in post.likes.all %}                                    
-                                <button type="submit" job="like-post" class="btn-success btn-sm pl-4 pr-4" >
-                                    
-                                    <i class="far fa-thumbs-up" job="like" name="post_id" id="thumbs-up" value="{{ post.id}}">{{post.total_likes}}</i>   
-                                    <p class="social-labels">Like</p> 
-                                </button>                                                
-                            {% else %}
-                                <button type="submit" job="like-post" class="btn-secondary btn-sm pl-4 pr-4" >
-                                    
-                                    <i class="far fa-thumbs-down" job="like" name="post_id" id="thumbs-up" value="{{ post.id}}">{{post.total_likes}}</i>   
-                                    <p class="social-labels">Unlike</p> 
-                                </button>
-                            
-                            {% endif %}
-                            </form>
-
-                            <form action="{% url 'view-post' post.pk %}"  method="GET">
-                                {% csrf_token %}
-                                <button type="submit", class="btn-seconday btn-sm " >
-                                    
-                                    <i class="fas fa-comment " job="comment" post-id=" ">{{post.total_comments}}</i>
-                              <p class="social-labels">Comment</p>
-                                </button>
-                            </form>
-
-                            <form>
-                                {% csrf_token %}
-                                <button type="button" class="share btn-info btn-sm btn-sm pl-4 pr-4" data-toggle="modal" data-target="#socialModalCenter" >
-                                    
-                                    <i class="fas fa-share-alt " job="share" value="{{ post.id}}"></i>
-                                    <p class="social-labels ">Share</p>
-                                </button>
-                            </form>
-                              
-                          
-                        </div>
-
-                        </div>
-                    
-                    
-
-                    
-                      </div>
-                      
-                    
-                     </div>
-
-                     <!-- END POST -->
-       
-        
-
-
-
-
-
+        {% include 'foodBookApp/snippets/post_block.html' %}
     {% endfor %}
     {% endif %}
 </div>
