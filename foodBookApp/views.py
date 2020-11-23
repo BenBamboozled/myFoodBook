@@ -205,31 +205,72 @@ def post(request, pk):
     return render(request, 'foodBookApp/post_detail.html', context)
 
 #profile function based view that takes in username and allows another user to view that profile
-# def profile(request, username):
-#     viewer = request.user
-#     user = User.objects.get(username=username)
-#     if not user:
-#         return redirect('user-profile', kwargs={'username':request.user.username})
+def profile(request, username):
+    viewer = Profile.objects.get(user=request.user)
+    user = User.objects.get(username=request.user)
+    if not user:
+        return redirect('profile')
     
-#     profile = Profile.objects.get(user=user)
-#     qs = Post.objects.filter(user=user).order_by('datePosted')
-#     page = request.GET.get('page', 1)
-#     paginator = Paginator(qs, 5)
-#     try:
-#         posts = paginator.page(page)
-#     except PageNotAnInteger:
-#         posts = paginator.page(1)
-#     except EmptyPage:
-#         posts = paginator.page(paginator.num_pages)
+    profile = Profile.objects.get(user=user)
+    user_profile = Profile.objects.get(user=request.user)
 
-#     context={
-#         'viewer': viewer,
-#         'profile': profile,
-#         'posts': posts,
-#         'page_obj': posts,
-#     }
+    rel_r = Relationship.objects.filter(sender=user_profile)
+    rel_s = Relationship.objects.filter(receiver=user_profile)
+    rel_receiver = []
+    rel_sender = []
+    for item in rel_r:
+        rel_receiver.append(item.receiver.user)
+    for item in rel_s:
+        rel_sender.append(item.sender.user)
+    
+    user = User.objects.get(username=username)
+    profile = Profile.objects.get(user=user)
+    posts = Post.objects.filter(user=user)
 
-#     return render(request, 'foodBookApp/user-profile.html', context)
+    context={
+        'viewer': viewer,
+        'username': username,
+        'user': user,
+        'profile': profile,
+        'posts': posts,
+        'rel_receiver': rel_receiver,
+        'rel_sender' : rel_sender
+    }
+
+    return render(request, 'foodBookApp/user-profile.html', context)
+
+def photos(request, username):
+    viewer = Profile.objects.get(user=request.user)
+    user = User.objects.get(username=username)
+    if not user:
+        return redirect('user-profile', kwargs={'username':request.user.username})
+    
+    profile = Profile.objects.get(user=user)
+    posts = Post.objects.filter(user=user)
+
+    context={
+        'viewer': viewer,
+        'username': username,
+        # 'user': user,
+        'profile': profile,
+        'posts': posts
+    }
+
+    return render(request, 'foodBookApp/user-photos.html', context)
+
+@login_required
+def my_photos(request):
+    profile = Profile.objects.get(user=request.user)
+
+    posts = Post.objects.filter(user=request.user)
+
+    context={
+        'profile': profile,
+        'posts': posts
+    }
+
+    return render(request, 'foodBookApp/photos.html', context)
+
 
 class ProfileListView(LoginRequiredMixin, ListView):
     model = Profile

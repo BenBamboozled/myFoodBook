@@ -44,14 +44,10 @@ urlpatterns = [
     path('main/', food_book_views.get_main_feed,name='main-feed'),
     path('explore/users', food_book_views.ProfileListView.as_view(),name='explore-users'),
     path('profile-edit',food_book_views.editProfile,name='edit-profile'),
-<<<<<<< HEAD
     path('profile/<str:username>', food_book_views.profile,name='user-profile'),
     path('profile/<str:username>/photos', food_book_views.photos,name='user-photos'),
     path('profile/<str:username>/friends', food_book_views.user_friends,name='user-friends'),
-=======
-    path('profile/<str:username>', food_book_views.ProfilePostListView.as_view(),name='user-profile'),
     path('settings/', food_book_views.user_settings, name='user-settings'),
->>>>>>> 62d0d14fa0432dd895ee5e573629ddac659b285a
 
     path('photos/', food_book_views.my_photos,name='my-photos'),
     path('friends/', food_book_views.friends,name='my-friends'),
