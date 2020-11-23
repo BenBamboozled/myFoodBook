@@ -89,11 +89,12 @@
 <div class="user-feed">
 
    
-    {% for post in posts reversed %}
+    {% for post in posts %}
         {% include 'foodBookApp/snippets/post_block.html' %}
     {% endfor %}
-    {% endif %}
 </div>
+    {% endif %}
+
 
 {% endblock %}
 
