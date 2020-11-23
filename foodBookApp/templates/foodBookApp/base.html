@@ -34,13 +34,13 @@
           <a href="{% url 'main-feed' %}"><img src="{% static 'foodBookApp/logo.png' %}" class="img-responsive"/></a>
 
           <!-- User profile img and dropdown -->
-          {% if user.is_authenticated %}
+          {% if request.user.is_authenticated %}
             <div class="dropdown order-sm-last">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <img src="{{user.profile.profilePic.url}}" class="img-responsive" height="26px" width="26px"/>
+                <img src="{{request.user.profile.profilePic.url}}" class="img-responsive" height="26px" width="26px"/>
               </a>
               <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="{% url 'user-profile' user.username %}">View profile</a>
+                <a class="dropdown-item" href="{% url 'user-profile' request.user.username %}">View profile</a>
                 <a class="dropdown-item" href="{% url 'edit-profile' %}">Edit profile</a>
                 <a class="dropdown-item" href="{% url 'user-settings' %}">Settings</a>
                 <div class="dropdown-divider"></div>
@@ -66,7 +66,7 @@
                 </form>
               </li>
             </ul>
-            {% if user.is_authenticated %}
+            {% if request.user.is_authenticated %}
             <ul class="navbar-nav ml-auto">
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'explore-users' %}" id="explore-users">

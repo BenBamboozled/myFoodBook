@@ -88,7 +88,7 @@ def editProfile(request):
         if p_form.is_valid:
            p_form.save()
            messages.success(request, f'Profile succesfully updated.')
-           return redirect('user-profile', kwargs={'username':request.user.username})
+           return redirect('/')
     else:
         p_form=ProfileUpdateForm(instance=request.user.profile)
 
@@ -137,9 +137,31 @@ class ProfilePostListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ProfilePostListView, self).get_context_data()
+
+        rel_receiver = []
+        rel_sender = []
+
+        if self.request.user.is_authenticated:
+            user = User.objects.get(username=self.request.user)
+            profile = Profile.objects.get(user=user)
+            rel_r = Relationship.objects.filter(sender=profile)
+            rel_s = Relationship.objects.filter(receiver=profile)
+            for item in rel_r:
+                rel_receiver.append(item.receiver.user)
+            for item in rel_s:
+                rel_sender.append(item.sender.user)
+        
         user = User.objects.get(username=self.kwargs.get('username'))
         profile = Profile.objects.get(user=user)
-        context['viewer'] = self.request.user
+        posts = Post.objects.filter(user=user)
+
+        context["rel_receiver"] = rel_receiver
+        context["rel_sender"] = rel_sender
+        context['is_empty'] = False
+        if len(self.get_queryset()) == 0:
+            context['is_empty'] = True
+        context['user'] = user
+
         context['profile'] = profile
         return context
 
@@ -204,43 +226,13 @@ def post(request, pk):
 
     return render(request, 'foodBookApp/post_detail.html', context)
 
-#profile function based view that takes in username and allows another user to view that profile
-def profile(request, username):
-    viewer = Profile.objects.get(user=request.user)
-    user = User.objects.get(username=request.user)
-    if not user:
-        return redirect('profile')
-    
-    profile = Profile.objects.get(user=user)
-    user_profile = Profile.objects.get(user=request.user)
-
-    rel_r = Relationship.objects.filter(sender=user_profile)
-    rel_s = Relationship.objects.filter(receiver=user_profile)
-    rel_receiver = []
-    rel_sender = []
-    for item in rel_r:
-        rel_receiver.append(item.receiver.user)
-    for item in rel_s:
-        rel_sender.append(item.sender.user)
-    
-    user = User.objects.get(username=username)
-    profile = Profile.objects.get(user=user)
-    posts = Post.objects.filter(user=user)
-
-    context={
-        'viewer': viewer,
-        'username': username,
-        'user': user,
-        'profile': profile,
-        'posts': posts,
-        'rel_receiver': rel_receiver,
-        'rel_sender' : rel_sender
-    }
-
-    return render(request, 'foodBookApp/user-profile.html', context)
 
 def photos(request, username):
-    viewer = Profile.objects.get(user=request.user)
+    if request.user.is_authenticated:
+        viewer = Profile.objects.get(user=request.user)
+    else:
+        viewer = None
+
     user = User.objects.get(username=username)
     if not user:
         return redirect('user-profile', kwargs={'username':request.user.username})
@@ -311,7 +303,11 @@ def friends(request):
 
 
 def user_friends(request, username):
-    viewer = Profile.objects.get(user=request.user)
+    if request.user.is_authenticated:
+        viewer = Profile.objects.get(user=request.user)
+    else:
+        viewer = None
+    
     user = User.objects.get(username=username)
     profile = Profile.objects.get(user=user)
     context = {'profile':profile,'viewer':viewer}

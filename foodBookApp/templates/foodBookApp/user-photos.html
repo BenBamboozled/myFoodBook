@@ -8,14 +8,16 @@
             <p>{{ profile.user.username }}</p>
             
             <div class="d-flex flex-row align-items-center">
-              
-                <a href="{% url 'new-user-convo' user.username %}" class="profile-buttons d-flex flex-column align-items-center">
+
+              {% if user %}
+                <a href="{% url 'new-user-convo' profile.user.username %}" class="profile-buttons d-flex flex-column align-items-center">
                     <i class="far fa-envelope mt-2"></i>
 
 
                     <p>Message</p>
 
                 </a>
+             {% endif %}
 
                 <a href="{% url 'user-friends' profile.user.username %}" class="profile-buttons d-flex flex-column align-items-center">
                     <i class="fas fa-user-friends mt-2"></i>

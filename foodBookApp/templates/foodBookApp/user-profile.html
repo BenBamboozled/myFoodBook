@@ -9,8 +9,8 @@
             
             <div class="d-flex flex-row align-items-center">
 
-            {% if viewer.user.username != profile.user.username %}
-                {% if profile.user in rel_receiver and viewer.user not in profile.friends.all %}
+            {% if request.user.username != profile.user.username %}
+                {% if profile.user in rel_receiver and request.user not in profile.friends.all %}
                 <button class="profile-buttons d-flex flex-column align-items-center">
                         
                     <p><i class="far fa-user mt-2 mb-0"></i>Awaiting</p>
@@ -18,7 +18,7 @@
                 {%else%}
                 
 
-                {% if viewer.user in profile.friends.all %}
+                {% if request.user in profile.friends.all %}
                 <form action="{%url 'remove-friend' %}" method="POST">
                     {% csrf_token %}
                     <input type="hidden" name="profile_pk" value={{profile.id}}>
@@ -28,7 +28,7 @@
                     </button>
                 </form> 
                 {% else %}
-                {% if viewer.user not in rel_receiver and viewer.user not in rel_sender %}
+                {% if request.user not in rel_receiver and request.user not in rel_sender %}
                 <form action="{%url 'send-invite'%}" method="POST">
                     {% csrf_token %}
                     <input type="hidden" name="profile_pk" value={{profile.id}}>
