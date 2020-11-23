@@ -1,0 +1,72 @@
+{% extends "foodBookApp/base.html"%}
+
+{% block content %}
+<div class="post d-flex flex-column align-items-center">
+    <div class="profile-body d-flex flex-column align-items-center">
+        <div class="profile-header d-flex flex-column align-items-center">
+            <img src="{{ user.profile.profilePic.url }}" class="mt-1" id="profile-pic" height="100rem" width="100rem"/>
+            <p>{{ user.username }}</p>
+            
+            <div class="d-flex flex-row align-items-center">
+
+
+
+                <a href="{% url 'new-post' %}" class="profile-buttons d-flex flex-column align-items-center">
+                    <i class="fas fa-pen mt-2"></i>
+
+                    <p>Post</p>
+
+                </a>
+              
+                <a href="{% url 'edit-profile' %}" class="profile-buttons d-flex flex-column align-items-center">
+                    <i class="far fa-user mt-2"></i>
+
+                    <p>Edit</p>
+
+                </a>
+
+                <a href="{% url 'my-friends' %}" class="profile-buttons d-flex flex-column align-items-center">
+                    <i class="fas fa-user-friends mt-2"></i>
+
+                    <p>Friends</p>
+
+                </a>
+
+                <a href="#" class="profile-buttons d-flex flex-column align-items-center">
+                    <i class="fas fa-image mt-2"></i>
+
+                    <p>Photos</p>
+
+                </a>
+           
+
+            </div>
+            
+
+        </div>
+        
+        {% if user.profile.bio %}
+        Bio
+        <p style="color:black;">{{ user.profile.bio }}</p>
+        
+        {% endif %}
+        
+    </div>
+
+
+    <h3 style="color:#1ebea5;">Posts</h3>
+</div>
+    {% if posts %}
+<div class="user-feed">
+
+   
+    {% for post in posts %}
+
+
+
+    {% endfor %}
+    {% endif %}
+</div>
+
+{% endblock %}
+
