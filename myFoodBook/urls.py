@@ -43,7 +43,7 @@ urlpatterns = [
 
     path('main/', food_book_views.get_main_feed,name='main-feed'),
     path('explore/users', food_book_views.ProfileListView.as_view(),name='explore-users'),
-    path('profile-edit',food_book_views.editProfile,name='edit-profile'),
+    path('profile-edit',food_book_views.ProfileUpdateView.as_view(),name='edit-profile'),
     path('profile/<str:username>', food_book_views.ProfilePostListView.as_view(),name='user-profile'),
     path('settings/', food_book_views.user_settings, name='user-settings'),
 

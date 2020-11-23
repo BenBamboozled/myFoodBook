@@ -2,7 +2,7 @@
 <div class="post d-flex flex-column align-items-center ">
     <div class="post-header d-flex flex-row justify-content-between">
         <div class="d-flex flex-row">
-            <img src="{{ post.user.profile.profilePic.url }}" class="m-1" id="profile-pic" height="32px"/> 
+            <img src="{{ post.user.profile.profilePic.url }}" class="profile-pic" id="profile-pic" style="height:32px; width:32px"/> 
             <a href="{% url 'user-profile' post.user.username %}" class="mt-1">{{ post.user.username }}</a>
 
         </div>
