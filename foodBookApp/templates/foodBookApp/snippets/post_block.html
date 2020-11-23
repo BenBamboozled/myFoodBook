@@ -8,7 +8,7 @@
 
         </div>
         {{ post.privacy }} {{ post.datePosted }}
-    {% if post.user == user %}
+    {% if post.user == request.user %}
       <div class="d-flex flex-row">
         
         <button type="button"  job="edit-post" class="post-buttons d-flex flex-column align-items-center mr-1">
