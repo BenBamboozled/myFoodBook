@@ -80,23 +80,23 @@ class TagAutocomplete(LoginRequiredMixin, autocomplete.Select2QuerySetView):
         return qs
 
 ##EditProfile fuinction provides form to allow user to update profile, will validate and update form if valid
-@login_required
-def editProfile(request):
-    if request.method == 'POST':
-        p_form = ProfileUpdateForm(request.POST, request.FILES,instance=request.user.profile)
+# @login_required
+# def editProfile(request):
+#     if request.method == 'POST':
+#         p_form = ProfileUpdateForm(request.POST, request.FILES,instance=request.user.profile)
 
-        if p_form.is_valid:
-           p_form.save()
-           messages.success(request, f'Profile succesfully updated.')
-           return redirect('/')
-    else:
-        p_form=ProfileUpdateForm(instance=request.user.profile)
+#         if p_form.is_valid:
+#            p_form.save()
+#            messages.success(request, f'Profile succesfully updated.')
+#            return redirect('user-profile', request.user.username)
+#     else:
+#         p_form=ProfileUpdateForm(instance=request.user.profile)
 
-    context = {
-        'p_form': p_form
-    }
+#     context = {
+#         'p_form': p_form
+#     }
 
-    return render(request,'foodBookApp/edit-profile.html', {'p_form': p_form})
+#     return render(request,'foodBookApp/edit-profile.html', context)
 
 
 
@@ -111,18 +111,6 @@ def home(request):
     # else:
     #     return HttpResponseRedirect('/splash')
     return HttpResponseRedirect('/main')
-
-##Class based view for creating a post
-class PostCreateView(LoginRequiredMixin, CreateView):
-    form_class = UpdatePostForm
-    model = Post
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse('user-profile', kwargs={'username':self.request.user.username})
 
 #Generic class view that querys and shows all posts from logged in user
 class ProfilePostListView(ListView):
@@ -164,6 +152,27 @@ class ProfilePostListView(ListView):
 
         context['profile'] = profile
         return context
+
+class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+    model = Profile
+    form_class = ProfileUpdateForm
+    template_name = 'foodBookApp/edit-profile.html'
+
+    def get_object(self):
+        return Profile.objects.get(user=self.request.user)
+
+
+##Class based view for creating a post
+class PostCreateView(LoginRequiredMixin, CreateView):
+    form_class = UpdatePostForm
+    model = Post
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('user-profile', kwargs={'username':self.request.user.username})
 
 #generic class based view/form that allows user to update body and tags to a post, validates that the post belongs to user and will  update
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
