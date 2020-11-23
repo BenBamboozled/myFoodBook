@@ -7,6 +7,11 @@ from django.db.models.signals import post_save #signal to creat profile
 from django.shortcuts import render, redirect, reverse #for rendering htttp pages
 from django.db.models import Q, Max #for complex queries on database
 
+PRIVACY_CHOICES = (
+    ('public', 'Public'),
+    ('private', 'Private'),
+    ('friends', 'Friends Only')
+)
 ##Post Model holds all info for each user post, foreign key is user who poster
 class Post(models.Model):
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
@@ -15,14 +20,9 @@ class Post(models.Model):
     datePosted = models.DateTimeField(default=timezone.now)
     tags = TaggableManager(blank=True)
     likes = models.ManyToManyField(User, related_name='like_post')
-    total_comments = models.IntegerField(default=0)
-
-    PRIVACY_CHOICES = (
-        ('public', 'Public'),
-        ('private', 'Private'),
-        ('friends', 'Friends Only')
-    )
     privacy = models.CharField(max_length=7, choices=PRIVACY_CHOICES, default="Public")
+
+    ordering = ['-datePosted']
 
     def total_likes(self):
         return self.likes.all().count()
@@ -68,6 +68,8 @@ class Profile(models.Model):
     friends = models.ManyToManyField(User, related_name='friends', blank=True)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
+
+    privacy = models.CharField(max_length=7, choices=PRIVACY_CHOICES, default="Public")
 
     objects = ProfileManager()
 

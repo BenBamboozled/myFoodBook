@@ -5,7 +5,7 @@ from django.template.defaultfilters import slugify
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView, FormView
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -32,32 +32,38 @@ def register(request):
         return render(request, 'foodBookApp/register.html', {'form': form})
 
 
+def search_results(request):
+    query = request.GET.get('q')
+    if not query:
+        print ("No query")
+        return render(request, 'foodBookApp/search.html')
 
-class SearchListView(TemplateView):
-    form_class = SearchForm
-    template_name = 'foodBookApp/search.html'
-    context_object_name = 'search_results'
+    profiles = Profile.objects.filter(user__username__icontains=query).order_by('user__username')
+    paginator = Paginator(profiles, 5)
+    page = request.GET.get('pagea')
+    try:
+        profiles = paginator.page(page)
+    except PageNotAnInteger:
+        profiles = paginator.page(1)
+    except EmptyPage:
+        profiles = paginator.page(paginator.num_pages)
 
-    def get_queryset(self):
-        # query = self.request.GET.get('q')
-        # if query:
-        #     qs = sorted(chain(
-        #         Profile.objects.filter(user__username__icontains=query),
-        #         Post.objects.filter(tags__name__icontains=query),
-        #     ), key=lambda instance: instance.pk)
-        #     return qs
-        return None
+    posts = Post.objects.filter(privacy="public").filter(tags__name__icontains=query).order_by('-datePosted')
+    paginator = Paginator(posts, 5)
+    page = request.GET.get('pageb')
+    try:
+        posts = paginator.page(page)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    except EmptyPage:
+        posts = paginator.page(paginator.num_pages)
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(SearchListView, self).get_context_data(**kwargs)
-        query = self.request.GET.get('q')
-        if query:
-            context['profiles'] = Profile.objects.filter(user__username__icontains=query)
-            context['posts'] = Post.objects.filter(tags__name__icontains=query)
+    context = {
+        'profiles': profiles,
+        'posts': posts,
+    }
 
-        return context
-
-# def SearchView():
+    return render(request, 'foodBookApp/search.html', context)
 
 
 # class TagAutocomplete(autocomplete.Select2ListView):
@@ -100,11 +106,11 @@ def splash(request):
 
 #home function checks if user is logged in and sends them to correct page
 def home(request):
-    if request.user.is_authenticated:
-        return HttpResponseRedirect('/profile/{}'.format(request.user.username))
-
-    else:
-        return HttpResponseRedirect('/splash')
+    # if request.user.is_authenticated:
+    #     return HttpResponseRedirect('/profile/{}'.format(request.user.username))
+    # else:
+    #     return HttpResponseRedirect('/splash')
+    return HttpResponseRedirect('/main')
 
 ##Class based view for creating a post
 class PostCreateView(LoginRequiredMixin, CreateView):
@@ -119,14 +125,23 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         return reverse('user-profile', kwargs={'username':self.request.user.username})
 
 #Generic class view that querys and shows all posts from logged in user
-class PostListView(LoginRequiredMixin, ListView):
+class ProfilePostListView(ListView):
     model = Post
     template_name ='foodBookApp/user-profile.html' #<app>/</model>_<viewtype>.html
     context_object_name = 'posts'
-    paginate_by = 10
+    paginate_by = 5
 
     def get_queryset(self):
-        return Post.objects.filter(user=self.request.user).order_by('-datePosted')
+        qs = Post.objects.filter(user=User.objects.get(username=self.kwargs.get('username'))).order_by('-datePosted')
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super(ProfilePostListView, self).get_context_data()
+        user = User.objects.get(username=self.kwargs.get('username'))
+        profile = Profile.objects.get(user=user)
+        context['viewer'] = self.request.user
+        context['profile'] = profile
+        return context
 
 #generic class based view/form that allows user to update body and tags to a post, validates that the post belongs to user and will  update
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -190,71 +205,31 @@ def post(request, pk):
     return render(request, 'foodBookApp/post_detail.html', context)
 
 #profile function based view that takes in username and allows another user to view that profile
-def profile(request, username):
-    viewer = Profile.objects.get(user=request.user)
-    user = User.objects.get(username=request.user)
-    if not user:
-        return redirect('profile')
+# def profile(request, username):
+#     viewer = request.user
+#     user = User.objects.get(username=username)
+#     if not user:
+#         return redirect('user-profile', kwargs={'username':request.user.username})
     
-    profile = Profile.objects.get(user=user)
-    user_profile = Profile.objects.get(user=request.user)
+#     profile = Profile.objects.get(user=user)
+#     qs = Post.objects.filter(user=user).order_by('datePosted')
+#     page = request.GET.get('page', 1)
+#     paginator = Paginator(qs, 5)
+#     try:
+#         posts = paginator.page(page)
+#     except PageNotAnInteger:
+#         posts = paginator.page(1)
+#     except EmptyPage:
+#         posts = paginator.page(paginator.num_pages)
 
-    rel_r = Relationship.objects.filter(sender=user_profile)
-    rel_s = Relationship.objects.filter(receiver=user_profile)
-    rel_receiver = []
-    rel_sender = []
-    for item in rel_r:
-        rel_receiver.append(item.receiver.user)
-    for item in rel_s:
-        rel_sender.append(item.sender.user)
-    
-    user = User.objects.get(username=username)
-    profile = Profile.objects.get(user=user)
-    posts = Post.objects.filter(user=user)
+#     context={
+#         'viewer': viewer,
+#         'profile': profile,
+#         'posts': posts,
+#         'page_obj': posts,
+#     }
 
-    context={
-        'viewer': viewer,
-        'username': username,
-        'user': user,
-        'profile': profile,
-        'posts': posts,
-        'rel_receiver': rel_receiver,
-        'rel_sender' : rel_sender
-    }
-
-    return render(request, 'foodBookApp/user-profile.html', context)
-
-def photos(request, username):
-    viewer = Profile.objects.get(user=request.user)
-    user = User.objects.get(username=username)
-    if not user:
-        return redirect('user-profile', kwargs={'username':request.user.username})
-    
-    profile = Profile.objects.get(user=user)
-    posts = Post.objects.filter(user=user)
-
-    context={
-        'viewer': viewer,
-        'username': username,
-        # 'user': user,
-        'profile': profile,
-        'posts': posts
-    }
-
-    return render(request, 'foodBookApp/user-photos.html', context)
-
-@login_required
-def my_photos(request):
-    profile = Profile.objects.get(user=request.user)
-
-    posts = Post.objects.filter(user=request.user)
-
-    context={
-        'profile': profile,
-        'posts': posts
-    }
-
-    return render(request, 'foodBookApp/photos.html', context)
+#     return render(request, 'foodBookApp/user-profile.html', context)
 
 class ProfileListView(LoginRequiredMixin, ListView):
     model = Profile
@@ -287,6 +262,7 @@ class ProfileListView(LoginRequiredMixin, ListView):
 
         return context    
 
+@login_required
 def friends(request):
     profile = Profile.objects.get(user=request.user)
     context = {'profile':profile}
@@ -330,7 +306,7 @@ def send_invatation(request):
         rel = Relationship.objects.create(sender=sender, receiver=receiver, status='send')
 
         return redirect(request.META.get('HTTP_REFERER'))
-    return redirect('user-profile', kwargs={'username':self.request.user.username})
+    return redirect('user-profile', kwargs={'username':request.user.username})
 
 ##remove a specified user from the logged in users friends list
 @login_required
@@ -374,26 +350,24 @@ def reject_invatation(request):
 
 #returns basic home feed, queries freinds of a proile then gets all of there posts
 def get_main_feed(request): 
-    profile = Profile.objects.get(user=request.user) 
-
-    qs = profile.friends.all()
-   
     results = [] 
-    for friend in qs:
-        posts = Post.objects.filter(user=friend.id)
-        for post in posts:
-            results.append(post)
+    if request.user.is_authenticated:
+        profile = Profile.objects.get(user=request.user) 
+        qs = profile.friends.all()
+        
+        for friend in qs:
+            posts = Post.objects.filter(user=friend.id)
+            for post in posts:
+                results.append(post)
 
-    results.reverse()
+    for post in Post.objects.filter(privacy='public').order_by('-datePosted')[:5]:
+        results.append(post)
 
-    is_empty = False
-    if len(results) == 0:
-        is_empty = True
+    # results.reverse()
 
     context = {
-            'posts': results,
-            'is_empty': is_empty,
-        }
+        'posts': results,
+    }
 
     return render(request, 'foodBookApp/main-feed.html', context)
 
@@ -420,8 +394,12 @@ def like(request, pk):
 
     return JsonResponse(data, safe=False)
 
+@login_required
+def user_settings(request):
+    return render(request, 'foodBookApp/user-settings.html')
 
-
+# class UserSettingsView(LoginRequiredMixin, FormView):
+#     template_name = 'foodBookApp/user-settings.html'
 
 
 
