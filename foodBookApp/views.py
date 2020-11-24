@@ -39,7 +39,7 @@ def search_results(request):
         return render(request, 'foodBookApp/search.html')
 
     # todo: user setting to hide profile from searches
-    profiles = Profile.objects.filter(tags__name__icontains=query).order_by('user__username')
+    profiles = Profile.objects.filter(user__username__icontains=query).order_by('user__username')
 
     paginator = Paginator(profiles, 5)
     page = request.GET.get('pagea')
