@@ -144,9 +144,11 @@ class ProfilePagePostListView(ListView):
     def get_queryset(self):
         # returns queryset of public posts; also friends-only posts if requester is friend
         qs = Post.objects.filter(user__username=self.kwargs.get('username'))
-        qs = qs.filter(privacy="public") 
+        
         if self.request.user.is_authenticated:
-            qs = qs.filter((Q(privacy="friends") & Q(user__profile__friends=self.request.user)))
+            qs = qs.filter(Q(privacy="public") | (Q(privacy="friends") & Q(user__profile__friends=self.request.user)))
+        else:
+            qs = qs.filter(privacy="public") 
         qs.order_by('-datePosted')
         return qs
 
