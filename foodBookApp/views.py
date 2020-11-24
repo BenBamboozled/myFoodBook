@@ -53,9 +53,11 @@ def search_results(request):
     # filter posts so that only public posts are always displayed and 
     # friends-only posts are displayed if requesting user is a friend of the post's user
     posts = Post.objects.filter(tags__name__icontains=query)
-    posts = posts.filter(privacy="public") 
+    
     if request.user.is_authenticated:
-        posts = posts.filter(Q(privacy="friends") & Q(user__profile__friends=request.user))
+        posts = posts.filter(Q(privacy="public") | (Q(privacy="friends") & Q(user__profile__friends=request.user)))
+    else:
+        posts = posts.filter(privacy="public") 
     posts = posts.order_by('-datePosted')
 
     paginator = Paginator(posts, 5)
@@ -144,7 +146,7 @@ class ProfilePagePostListView(ListView):
         qs = Post.objects.filter(user__username=self.kwargs.get('username'))
         qs = qs.filter(privacy="public") 
         if self.request.user.is_authenticated:
-            qs = (Q(privacy="friends") & Q(user__profile__friends=self.request.user))
+            qs = qs.filter((Q(privacy="friends") & Q(user__profile__friends=self.request.user)))
         qs.order_by('-datePosted')
         return qs
 
