@@ -1,0 +1,91 @@
+<div class="post d-flex flex-column align-items-center">
+    <div class="profile-body d-flex flex-column align-items-center">
+        <div class="profile-header d-flex flex-column align-items-center">
+            <img src="{{ profile.profilePic.url }}" alt="profile-pic" class="profile-pic"/>
+            <a href="{% url 'user-profile' profile.user.username %}">{{ profile.user.username }} ({{ profile.get_privacy_display }})</a>
+            
+            <div class="d-flex flex-row align-items-center">
+
+            {% if request.user.username != profile.user.username %}
+                {% if profile.user in rel_receiver and request.user not in profile.friends.all %}
+                    <button class="profile-buttons d-flex flex-column align-items-center">
+                            
+                        <p><i class="far fa-user mt-2 mb-0"></i>Awaiting</p>
+                    </button>
+                {%else%}
+                    {% if request.user in profile.friends.all %}
+                        <form action="{%url 'remove-friend' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="profile_pk" value={{profile.id}}>
+                            <button class="profile-buttons d-flex flex-column align-items-center" style="background-color: red;">
+                                
+                                <p><i class="far fa-user mt-2 mb-0"></i>Remove</p>
+                            </button>
+                        </form> 
+                    {% else %}
+                        {% if request.user not in rel_receiver and request.user not in rel_sender %}
+                            <form action="{%url 'send-invite'%}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="profile_pk" value={{profile.id}}>
+                                    <button class="profile-buttons d-flex flex-column align-items-center" style="background-color: green;">
+                                    
+                                        <p><i class="far fa-user mt-2 mb-0"></i><br>Add</p>
+                                    </button>
+                            </form>
+                        {%endif%}
+                    {% endif %}
+                {% endif %}
+                {% if can_view %}
+                    <a href="{% url 'new-user-convo' profile.user.username %}" class="profile-buttons d-flex flex-column align-items-center">
+                        <i class="far fa-envelope mt-2"></i>
+                        <p>Message</p>
+                    </a>
+
+                    <a href="{% url 'user-friends' profile.user.username %}" class="profile-buttons d-flex flex-column align-items-center">
+                        <i class="fas fa-user-friends mt-2"></i>
+                        <p>Friends</p>
+                    </a>
+
+                    <a href="{% url 'user-photos' profile.user.username %}" class="profile-buttons d-flex flex-column align-items-center">
+                        <i class="fas fa-image mt-2"></i>
+                        <p>Photos</p>
+                    </a>
+                {% endif %}
+            {% else %}
+                <a href="{% url 'new-post' %}" class="profile-buttons d-flex flex-column align-items-center">
+                    <i class="fas fa-pen mt-2"></i>
+                    <p>Post</p>
+                </a>
+            
+                <a href="{% url 'edit-profile' %}" class="profile-buttons d-flex flex-column align-items-center">
+                    <i class="far fa-user mt-2"></i>
+                    <p>Edit</p>
+                </a>
+
+                <a href="{% url 'my-friends' %}" class="profile-buttons d-flex flex-column align-items-center">
+                    <i class="fas fa-user-friends mt-2"></i>
+                    <p>Friends</p>
+                </a>
+
+                <a href="{% url 'my-photos' %}" class="profile-buttons d-flex flex-column align-items-center">
+                    <i class="fas fa-image mt-2"></i>
+                    <p>Photos</p>
+                </a>
+            {% endif %}
+           
+
+            </div>
+            
+
+        </div>
+        {% if can_view %}
+            {% if profile.bio %}
+            Bio
+            <p style="color:black;">{{ profile.bio }}</p>
+            
+            {% endif %}
+        {% else %}
+            <p style="text-align:center">User has restricted privacy setting: {{ profile.privacy }}</p>
+        {% endif %}
+    </div>
+</div>

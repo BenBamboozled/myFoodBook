@@ -82,6 +82,9 @@ class Profile(models.Model):
     def total_friends(self):
         return self.friends.all().count()
 
+    def can_view(self, request):
+        return self.privacy == "public" or (request.user.is_authenticated and self.privacy == "friends" and Profile.objects.filter(friends=request.user).exists())
+
     def __str__(self): #to string for Profile Model
         return f'{self.user.username} Profile'
 

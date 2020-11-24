@@ -5,7 +5,7 @@
             <div class="d-flex justify-content-center">
                 <img class="ui small circular image profile-pic" src={{obj.profilePic.url}}>
             </div>
-            <h3 class="text-center">{{obj.user.username}}</h3>
+            <h3 class="text-center">{{obj.user.username}} ({{ obj.get_privacy_display }})</h3>
             
             <div d-flex flex-column  >
                 <p class="text-center" style="color: black;">{{obj.bio}}</p>
@@ -13,7 +13,7 @@
                     
 
                 <div class="d-flex flex-row justify-content-center">
-                    <a href="/profile/{{obj.user.username}}">
+                    <a href="{% url 'user-profile' obj.user.username %}">
                         <button class="btn btn-sm form-button ml-2 mb-2">See profile</button>
                     </a>
 

@@ -38,7 +38,9 @@ def search_results(request):
         print ("No query")
         return render(request, 'foodBookApp/search.html')
 
-    profiles = Profile.objects.filter(user__username__icontains=query).order_by('user__username')
+    # todo: user setting to hide profile from searches
+    profiles = Profile.objects.all().order_by('user__username')
+
     paginator = Paginator(profiles, 5)
     page = request.GET.get('pagea')
     try:
@@ -48,7 +50,14 @@ def search_results(request):
     except EmptyPage:
         profiles = paginator.page(paginator.num_pages)
 
-    posts = Post.objects.filter(privacy="public").filter(tags__name__icontains=query).order_by('-datePosted')
+    # filter posts so that only public posts are always displayed and 
+    # friends-only posts are displayed if requesting user is a friend of the post's user
+    posts = Post.objects.filter(tags__name__icontains=query)
+    posts = posts.filter(privacy="public") 
+    if request.user.is_authenticated:
+        posts = posts.filter(Q(privacy="friends") & Q(user__profile__friends=request.user))
+    posts = posts.order_by('-datePosted')
+
     paginator = Paginator(posts, 5)
     page = request.GET.get('pageb')
     try:
@@ -79,26 +88,6 @@ class TagAutocomplete(LoginRequiredMixin, autocomplete.Select2QuerySetView):
 
         return qs
 
-##EditProfile fuinction provides form to allow user to update profile, will validate and update form if valid
-# @login_required
-# def editProfile(request):
-#     if request.method == 'POST':
-#         p_form = ProfileUpdateForm(request.POST, request.FILES,instance=request.user.profile)
-
-#         if p_form.is_valid:
-#            p_form.save()
-#            messages.success(request, f'Profile succesfully updated.')
-#            return redirect('user-profile', request.user.username)
-#     else:
-#         p_form=ProfileUpdateForm(instance=request.user.profile)
-
-#     context = {
-#         'p_form': p_form
-#     }
-
-#     return render(request,'foodBookApp/edit-profile.html', context)
-
-
 
 #splash page for when users are not logged in
 def splash(request):
@@ -112,19 +101,55 @@ def home(request):
     #     return HttpResponseRedirect('/splash')
     return HttpResponseRedirect('/main')
 
+class ProfileListView(LoginRequiredMixin, ListView):
+    model = Profile
+    template_name = 'foodBookApp/profile-list.html'
+    context_object_name = 'qs'
+    paginate_by = 10
+
+    def get_queryset(self):
+        qs = Profile.objects.filter(Q(privacy="public") |
+        (Q(privacy="friends") & Q(friends=self.request.user)))
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = User.objects.get(username__iexact=self.request.user)
+        profile = Profile.objects.get(user=user)
+        rel_r = Relationship.objects.filter(sender=profile)
+        rel_s = Relationship.objects.filter(receiver=profile)
+        rel_receiver = []
+        rel_sender = []
+        for item in rel_r:
+            rel_receiver.append(item.receiver.user)
+        for item in rel_s:
+            rel_sender.append(item.sender.user)
+        context["rel_receiver"] = rel_receiver
+        context["rel_sender"] = rel_sender
+        context['is_empty'] = False
+        if len(self.get_queryset()) == 0:
+            context['is_empty'] = True
+
+        return context   
+
 #Generic class view that querys and shows all posts from logged in user
-class ProfilePostListView(ListView):
+class ProfilePagePostListView(ListView):
     model = Post
     template_name ='foodBookApp/user-profile.html' #<app>/</model>_<viewtype>.html
     context_object_name = 'posts'
     paginate_by = 5
 
     def get_queryset(self):
-        qs = Post.objects.filter(user=User.objects.get(username=self.kwargs.get('username'))).order_by('-datePosted')
+        # returns queryset of public posts; also friends-only posts if requester is friend
+        qs = Post.objects.filter(user__username=self.kwargs.get('username'))
+        qs = qs.filter(privacy="public") 
+        if self.request.user.is_authenticated:
+            qs = (Q(privacy="friends") & Q(user__profile__friends=self.request.user))
+        qs.order_by('-datePosted')
         return qs
 
     def get_context_data(self, **kwargs):
-        context = super(ProfilePostListView, self).get_context_data()
+        context = super(ProfilePagePostListView, self).get_context_data()
 
         rel_receiver = []
         rel_sender = []
@@ -142,6 +167,7 @@ class ProfilePostListView(ListView):
         user = User.objects.get(username=self.kwargs.get('username'))
         profile = Profile.objects.get(user=user)
         posts = Post.objects.filter(user=user)
+        can_view = profile.can_view(self.request)
 
         context["rel_receiver"] = rel_receiver
         context["rel_sender"] = rel_sender
@@ -149,6 +175,7 @@ class ProfilePostListView(ListView):
         if len(self.get_queryset()) == 0:
             context['is_empty'] = True
         context['user'] = user
+        context['can_view'] = can_view
 
         context['profile'] = profile
         return context
@@ -243,12 +270,14 @@ def photos(request, username):
     
     profile = Profile.objects.get(user=user)
     posts = Post.objects.filter(user=user)
+    can_view = profile.can_view(request)
 
     context={
         'username': username,
         # 'user': user,
         'profile': profile,
-        'posts': posts
+        'posts': posts,
+        'can_view': can_view
     }
 
     return render(request, 'foodBookApp/user-photos.html', context)
@@ -264,50 +293,21 @@ def my_photos(request):
         'posts': posts
     }
 
-    return render(request, 'foodBookApp/photos.html', context)
+    return render(request, 'foodBookApp/my-photos.html', context)
 
-
-class ProfileListView(LoginRequiredMixin, ListView):
-    model = Profile
-    template_name = 'foodBookApp/profile-list.html'
-    context_object_name = 'qs'
-    paginate_by = 10
-
-    def get_queryset(self):
-        # qs = Profile.objects.get_all_profiles(self.request.user)
-        qs = Profile.objects.all()
-        return qs
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        user = User.objects.get(username__iexact=self.request.user)
-        profile = Profile.objects.get(user=user)
-        rel_r = Relationship.objects.filter(sender=profile)
-        rel_s = Relationship.objects.filter(receiver=profile)
-        rel_receiver = []
-        rel_sender = []
-        for item in rel_r:
-            rel_receiver.append(item.receiver.user)
-        for item in rel_s:
-            rel_sender.append(item.sender.user)
-        context["rel_receiver"] = rel_receiver
-        context["rel_sender"] = rel_sender
-        context['is_empty'] = False
-        if len(self.get_queryset()) == 0:
-            context['is_empty'] = True
-
-        return context    
+ 
 
 @login_required
 def friends(request):
     profile = Profile.objects.get(user=request.user)
     context = {'profile':profile}
-    return render(request,'foodBookApp/friends.html',context)
+    return render(request,'foodBookApp/my-friends.html',context)
 
 def user_friends(request, username):    
     user = User.objects.get(username=username)
     profile = Profile.objects.get(user=user)
-    context = {'profile':profile}
+    can_view = profile.can_view(request)
+    context = {'profile':profile, 'can_view':can_view}
     return render(request,'foodBookApp/user-friends.html',context)
 
 @login_required
