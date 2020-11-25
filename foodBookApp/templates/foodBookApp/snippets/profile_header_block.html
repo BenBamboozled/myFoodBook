@@ -34,12 +34,12 @@
                                 </button>
                             </form>  
                         {% else %}
-                            <form action="{%url 'my-invites' %}" method="GET">
+                            <form action="{% url 'accept-invite' %}" method="POST">
                                 {% csrf_token %}
                                 <input type="hidden" name="profile_pk" value={{profile.id}}>
                                     <button class="profile-buttons d-flex flex-column align-items-center">
                                         
-                                        <p><i class="far fa-user mt-2 mb-0"></i>Respond</p>
+                                        <p><i class="fas fa-check mt-2 mb-0"></i>Accept</p>
                                     </button>  
                             </form>
                         {% endif %}
