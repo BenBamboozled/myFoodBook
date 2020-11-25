@@ -283,14 +283,24 @@ def photos(request, username):
     profile = Profile.objects.get(user=user)
     posts = Post.objects.filter(user=user)
     can_view = profile.can_view(request)
-
-    context={
+    rel_profile = Profile.objects.get(user=request.user)
+    rel_r = Relationship.objects.filter(sender=rel_profile)
+    rel_s = Relationship.objects.filter(receiver=rel_profile)
+    rel_receiver = []
+    rel_sender = []
+    for item in rel_r:
+        rel_receiver.append(item.receiver.user)
+    for item in rel_s:
+        rel_sender.append(item.sender.user)
+    context = {
         'username': username,
         # 'user': user,
         'profile': profile,
         'posts': posts,
-        'can_view': can_view
-    }
+        'rel_receiver': rel_receiver,
+        'rel_sender': rel_sender,
+        'can_view':can_view
+        }
 
     return render(request, 'foodBookApp/user-photos.html', context)
 
@@ -319,7 +329,23 @@ def user_friends(request, username):
     user = User.objects.get(username=username)
     profile = Profile.objects.get(user=user)
     can_view = profile.can_view(request)
-    context = {'profile':profile, 'can_view':can_view}
+    rel_profile = Profile.objects.get(user=request.user)
+    rel_r = Relationship.objects.filter(sender=rel_profile)
+    rel_s = Relationship.objects.filter(receiver=rel_profile)
+    rel_receiver = []
+    rel_sender = []
+    for item in rel_r:
+        rel_receiver.append(item.receiver.user)
+    for item in rel_s:
+        rel_sender.append(item.sender.user)
+
+    context = {
+        'profile':profile,
+        'rel_receiver': rel_receiver,
+        'rel_sender': rel_sender,
+        'can_view':can_view
+        }
+
     return render(request,'foodBookApp/user-friends.html',context)
 
 @login_required
@@ -348,8 +374,9 @@ def send_invatation(request):
         user = request.user
         sender = Profile.objects.get(user=user)
         receiver = Profile.objects.get(pk=pk)
-
-        rel = Relationship.objects.create(sender=sender, receiver=receiver, status='send')
+        rel = Relationship.objects.filter(sender=receiver, receiver=sender)
+        if not rel:
+            rel = Relationship.objects.create(sender=sender, receiver=receiver, status='send')
 
         return redirect(request.META.get('HTTP_REFERER'))
     return redirect('user-profile', kwargs={'username':request.user.username})
@@ -381,7 +408,7 @@ def accept_invatation(request):
         if rel.status == 'send':
             rel.status = 'accepted'
             rel.save()
-    return redirect('my-invites')
+    return redirect(request.META.get('HTTP_REFERER'))
 
 ##to send a friend invite
 @login_required

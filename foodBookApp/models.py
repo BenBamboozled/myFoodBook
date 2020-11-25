@@ -20,7 +20,7 @@ class Post(models.Model):
     datePosted = models.DateTimeField(default=timezone.now)
     tags = TaggableManager(blank=True)
     likes = models.ManyToManyField(User, related_name='like_post')
-    privacy = models.CharField(max_length=7, choices=PRIVACY_CHOICES, default="Public")
+    privacy = models.CharField(max_length=7, choices=PRIVACY_CHOICES, default="public")
 
     ordering = ['-datePosted']
 
@@ -69,7 +69,7 @@ class Profile(models.Model):
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 
-    privacy = models.CharField(max_length=7, choices=PRIVACY_CHOICES, default="Public")
+    privacy = models.CharField(max_length=7, choices=PRIVACY_CHOICES, default="public")
 
     objects = ProfileManager()
 
