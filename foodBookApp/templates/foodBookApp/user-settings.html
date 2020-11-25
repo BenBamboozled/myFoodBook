@@ -1,8 +1,21 @@
 {% extends "foodBookApp/base.html"%}
 {% block content %}
 
-<a href="{% url 'change-password' %}">
-    <button class="btn">Change password</button>
-</a>
 
+
+<div class="d-flex flex-column">
+    <a href="{% url 'edit-user' %}">
+        <button class="btn btn-info mb-1">Update Email</button>
+    </a>
+    <a href="{% url 'change-password' %}">
+        <button class="btn btn-secondary mb-1">Change password</button>
+    </a>
+    <a href="#">
+        <button class="btn btn-warning mb-1" job="disable-account">Disable Account</button>
+    </a>
+    <a href="#">
+        <button class="btn btn-danger mb-1" job="delete-account">Delete Account</button>
+    </a>
+
+</div>
 {% endblock %}

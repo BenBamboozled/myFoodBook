@@ -12,7 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .models import Post, Profile, Relationship, Comment
-from .forms import UpdatePostForm, UserRegistrationForm, ProfileUpdateForm, SearchForm, AddCommentForm
+from .forms import UpdatePostForm, UserRegistrationForm, ProfileUpdateForm, SearchForm, AddCommentForm, UserUpdateForm
 
 from dal import autocomplete
 from taggit.models import Tag
@@ -192,7 +192,15 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     def get_object(self):
         return Profile.objects.get(user=self.request.user)
 
+class UserUpdateView(LoginRequiredMixin, UpdateView):
+    model = User
+    form_class = UserUpdateForm
+    template_name = 'foodBookApp/edit-user.html'
+    success_url='/settings'
 
+    def get_object(self):
+        return self.request.user
+        
 ##Class based view for creating a post
 class PostCreateView(LoginRequiredMixin, CreateView):
     form_class = UpdatePostForm
@@ -410,7 +418,6 @@ def get_main_feed(request):
     return render(request, 'foodBookApp/main-feed.html', context)
 
 ## function for when a user likes a post
-@login_required
 def like(request, pk):
     user = request.user
     profile = Profile.objects.get(user=user)
@@ -448,8 +455,17 @@ def user_settings(request):
 # class UserSettingsView(LoginRequiredMixin, FormView):
 #     template_name = 'foodBookApp/user-settings.html'
 
+@login_required
+def delete_profile(request):
+    user = request.user
+    user.delete()
+    messages.success(request, 'Profile successfully deleted.')
+    return redirect('home')
 
-
-
-
-
+@login_required
+def disable_profile(request):
+    user = request.user
+    user.is_active = False
+    user.save()
+    messages.success(request, 'Profile successfully disabled.')
+    return redirect('home')
