@@ -348,8 +348,9 @@ def send_invatation(request):
         user = request.user
         sender = Profile.objects.get(user=user)
         receiver = Profile.objects.get(pk=pk)
-
-        rel = Relationship.objects.create(sender=sender, receiver=receiver, status='send')
+        rel = Relationship.objects.filter(sender=receiver, receiver=sender)
+        if not rel:
+            rel = Relationship.objects.create(sender=sender, receiver=receiver, status='send')
 
         return redirect(request.META.get('HTTP_REFERER'))
     return redirect('user-profile', kwargs={'username':request.user.username})

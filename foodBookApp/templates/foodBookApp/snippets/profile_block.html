@@ -17,28 +17,34 @@
                         <button class="btn btn-sm form-button ml-2 mb-2">See profile</button>
                     </a>
 
-                    {% if obj.user not in rel_receiver and obj.user not in rel_sender %}
-                    <form action="{%url 'send-invite'%}" method="POST">
-                        {% csrf_token %}
-                        <input type="hidden" name="profile_pk" value={{obj.pk}}>
+                        {% if obj.user not in rel_receiver and obj.user not in rel_sender %}
+                            <form action="{%url 'send-invite'%}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="profile_pk" value={{obj.pk}}>
+                                
+                                <button class="btn btn-sm btn-success ml-2 mb-2">Add Friend</button>
+                                
+                            </form>
+                        {%else%}
+                            {% if obj.user in rel_receiver and request.user not in obj.friends.all %}
+                                <button class="btn btn-sm btn-secondary ml-2 mb-2" >Awaiting response</button>                   
+                            {% else %}
                         
-                        <button class="btn btn-sm btn-success ml-2 mb-2">Add Friend</button>
-                        
-                    </form>
-                    {%endif%}
-
-                    {% if obj.user in rel_receiver and request.user not in obj.friends.all %}
-                        <button class="btn btn-sm btn-secondary ml-2 mb-2" >Awaiting response</button>
-                    
-                    {% endif %}
-
-                    {% if request.user in obj.friends.all %}
-                    <form action="{%url 'remove-friend' %}" method="POST">
-                        {% csrf_token %}
-                        <input type="hidden" name="profile_pk" value={{obj.pk}}>
-                        <button class="btn btn-sm btn-danger ml-2 mb-2" >Remove Friend</button>
-                    </form> 
-                    {% endif %}
+                                {% if request.user in obj.friends.all %}
+                                    <form action="{%url 'remove-friend' %}" method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="profile_pk" value={{obj.pk}}>
+                                        <button class="btn btn-sm btn-danger ml-2 mb-2" >Remove Friend</button>
+                                    </form>
+                                {% else %}
+                                    <form action="{%url 'my-invites' %}" method="GET">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="profile_pk" value={{obj.pk}}>
+                                        <button class="btn btn-sm btn-secondary ml-2 mb-2" >Respond to Invite</button>
+                                    </form>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
 
                 </div>
 
