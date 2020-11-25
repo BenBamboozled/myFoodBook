@@ -7,7 +7,7 @@
             <a href="{% url 'user-profile' post.user.username %}" class="mt-1">{{ post.user.username }}</a>
 
         </div>
-        {{ post.privacy }} {{ post.datePosted }}
+        {{ post.get_privacy_display }} {{ post.datePosted }}
     {% if post.user == request.user %}
       <div class="d-flex flex-row">
         

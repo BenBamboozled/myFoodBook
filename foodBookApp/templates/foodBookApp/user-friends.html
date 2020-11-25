@@ -1,57 +1,9 @@
 {% extends "foodBookApp/base.html"%}
 
 {% block content %}
-<div class="post d-flex flex-column align-items-center">
-    <div class="profile-body d-flex flex-column align-items-center">
-        <div class="profile-header d-flex flex-column align-items-center">
-            <img src="{{ profile.user.profile.profilePic.url }}" class="mt-1" id="profile-pic" height="100rem" width="100rem"/>
-            <p>{{ profile.user.username }}</p>
-            
-            <div class="d-flex flex-row align-items-center">
-
-              
-                <a href="{% url 'new-user-convo' profile.user.username %}" class="profile-buttons d-flex flex-column align-items-center">
-                    <i class="far fa-envelope mt-2"></i>
-
-
-                    <p>Message</p>
-
-                </a>
-
-                <a href="{% url 'user-friends' profile.user.username %}" class="profile-buttons d-flex flex-column align-items-center">
-                    <i class="fas fa-user-friends mt-2"></i>
-
-                    <p>Friends</p>
-
-                </a>
-
-                <a href="{% url 'user-photos' profile.user.username %}" class="profile-buttons d-flex flex-column align-items-center">
-                    <i class="fas fa-image mt-2"></i>
-
-                    <p>Photos</p>
-
-                </a>
-           
-
-            </div>
-            
-
-        </div>
-        
-        {% if profile.bio %}
-        Bio
-        <p style="color:black;">{{ profile.bio }}</p>
-        
-        {% endif %}
-        
-    </div>
-
-
-    <h3 style="color:#1ebea5;">Friends</h3>
-</div>
-{% if is_empty %}
-<h1>No friends..</h1>
-{% endif %}
+{% include 'foodBookApp/snippets/profile_header_block.html' %}
+{% if can_view %}
+    <h3 style="color:#1ebea5; text-align: center;">Friends</h3>
 
 {% for friend in profile.get_friends %}
 <div class="container-fluid">
@@ -79,6 +31,8 @@
         </div>
     </div>
 </div>
+{% empty %}
+    <h1>No friends..</h1>
 {% endfor %}
-
+{% endif %}
 {% endblock %}
