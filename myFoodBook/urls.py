@@ -34,9 +34,9 @@ urlpatterns = [
     path('register/',food_book_views.register,name='register'),
     path('login/',auth_views.LoginView.as_view(template_name='foodBookApp/login.html'), name='login'),
     path('logout/',auth_views.LogoutView.as_view(template_name='foodBookApp/logout.html'), name='logout'),
-    path('change-password/', auth_views.PasswordChangeView.as_view(),name='change-password'),
+    path('change-password/', auth_views.PasswordChangeView.as_view(template_name='foodBookApp/change-password.html'),name='change-password'),
     path('reset-password', auth_views.PasswordResetView.as_view(),name='reset-password'),
-    path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(), name='password_change_done'),
+    path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(template_name='foodBookApp/change-password-done.html'), name='password_change_done'),
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
@@ -48,6 +48,10 @@ urlpatterns = [
     path('profile/<str:username>/photos', food_book_views.photos,name='user-photos'),
     path('profile/<str:username>/friends', food_book_views.user_friends,name='user-friends'),
     path('settings/', food_book_views.user_settings, name='user-settings'),
+    path('delete-profile', food_book_views.delete_profile,name='delete-profile'),
+    path('disable-profile', food_book_views.disable_profile,name='disable-profile'),
+    path('edit-user', food_book_views.UserUpdateView.as_view(),name='edit-user'),
+
 
     path('photos/', food_book_views.my_photos,name='my-photos'),
     path('friends/', food_book_views.friends,name='my-friends'),
