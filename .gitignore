@@ -3,5 +3,6 @@
 *.sqlite3
 *.exe
 /static
+.gcloudignore
 
 
