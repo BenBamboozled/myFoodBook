@@ -4,5 +4,6 @@
 *.exe
 /static
 .gcloudignore
+credentials.json
 
 
