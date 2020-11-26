@@ -143,10 +143,11 @@ class ProfilePagePostListView(ListView):
 
     def get_queryset(self):
         # returns queryset of public posts; also friends-only posts if requester is friend
-        qs = Post.objects.filter(user__username=self.kwargs.get('username'))
+        profile = Profile.objects.get(user__username=self.kwargs.get('username'))
+        qs = Post.objects.filter(user=profile.user)
         
         if self.request.user.is_authenticated:
-            qs = qs.filter(Q(privacy="public") | (Q(privacy="friends") & Q(user__profile__friends=self.request.user)))
+            qs = qs.filter(Q(privacy="public") | Q(user=self.request.user) | (Q(privacy="friends") & Q(user__profile__friends=self.request.user)))
         else:
             qs = qs.filter(privacy="public") 
         qs.order_by('-datePosted')
@@ -170,7 +171,6 @@ class ProfilePagePostListView(ListView):
         
         user = User.objects.get(username=self.kwargs.get('username'))
         profile = Profile.objects.get(user=user)
-        posts = Post.objects.filter(user=user)
         can_view = profile.can_view(self.request.user)
 
         context["rel_receiver"] = rel_receiver
@@ -436,7 +436,7 @@ def get_main_feed(request):
             for post in posts:
                 results.append(post)
 
-    for post in Post.objects.filter(privacy='public').order_by('-datePosted')[:5]:
+    for post in Post.objects.filter(privacy='public').order_by('-datePosted').distinct()[:5]:
         results.append(post)
 
     # results.reverse()
