@@ -77,8 +77,6 @@ class Profile(models.Model):
     def get_friends(self):
         return self.friends.all()
     
-
-
     def total_friends(self):
         return self.friends.all().count()
 
@@ -90,13 +88,6 @@ class Profile(models.Model):
 
     def save(self, *args, **kwargs):  #overrides save function to save image if any
         super().save(*args, **kwargs)
-
-        img = Image.open(self.profilePic.path)
-
-        if img.height > 100 or img.width > 100:
-            output_size = (100, 100)
-            img.thumbnail(output_size)
-            img.save(self.profilePic.path)
 
     def get_absolute_url(self):
         return reverse('user-profile', kwargs={'username': self.user.username})

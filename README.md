@@ -31,3 +31,11 @@ Gist: Fork a personal copy of repository, (recommended) work on self/feature bra
 ## Profile add/remove friends
 
 - the profile add/remove/awaiting friends button is working for new users after sign up but does not seem to be working correct for existing users.
+
+## Deployment to Google CLoud
+
+- Everything is deployed from this git [https://myfoodbook-296719.uc.r.appspot.com/](https://myfoodbook-296719.uc.r.appspot.com/)
+- the only thing not updated is the settings.py which included private information like password and database information. I can send the updated deployment settings.py to other team members but do not want to post sensitive info to github.
+- Hosted on the Google Cloud Platform for security, performance, scalabilitly
+- Uses a cloud mysql database also provided by the Google Cloud Platform
+- Any bugs or fixes can be pulled here and I will update to the deployment platform.
