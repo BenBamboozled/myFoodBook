@@ -1,4 +1,7 @@
 .vscode
 *.py[cod]
 *.sqlite3
+*.exe
+/static
+
 
