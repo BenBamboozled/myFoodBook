@@ -228,6 +228,9 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         form.instance.user = self.request.user
         return super().form_valid(form)
 
+    def get_success_url(self):
+        return reverse('user-profile', kwargs={'username':self.request.user.username})
+
 #generic class based view that allows user to delete post belonging to them after completing prompt
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
