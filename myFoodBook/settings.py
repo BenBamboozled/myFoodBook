@@ -102,7 +102,7 @@ if DEPLOY:
             'default': {
                 'ENGINE': 'django.db.backends.mysql',
                 'HOST': '/cloudsql/myfoodbook-296719:us-central1:foodbook-instance',
-                'USER': 'foodbook',
+                'USER': 'ben',
                 'PASSWORD': config['DB_PASS'],
                 'NAME': 'main',
             }
@@ -120,7 +120,7 @@ if DEPLOY:
                 'HOST': '127.0.0.1',
                 'PORT': '3306',
                 'NAME': 'main',
-                'USER': 'foodbook',
+                'USER': 'ben',
                 'PASSWORD': config['DB_PASS'],
             }
         }
