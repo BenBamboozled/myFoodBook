@@ -29,7 +29,7 @@ SECRET_KEY = '72d%(jpn80s%=smco%g-s_wa(x^7!*)tz(2+gc(u2*#bi5pg15'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-DEPLOY = False
+DEPLOY = True
 
 ALLOWED_HOSTS = ["*"]
 
