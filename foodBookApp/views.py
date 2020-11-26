@@ -35,7 +35,7 @@ def register(request):
 def search_results(request):
     query = request.GET.get('q')
     if not query:
-        print ("No query")
+        # print ("No query")
         return render(request, 'foodBookApp/search.html')
 
     # todo: user setting to hide profile from searches
@@ -171,7 +171,7 @@ class ProfilePagePostListView(ListView):
         user = User.objects.get(username=self.kwargs.get('username'))
         profile = Profile.objects.get(user=user)
         posts = Post.objects.filter(user=user)
-        can_view = profile.can_view(self.request)
+        can_view = profile.can_view(self.request.user)
 
         context["rel_receiver"] = rel_receiver
         context["rel_sender"] = rel_sender
@@ -282,7 +282,7 @@ def photos(request, username):
     
     profile = Profile.objects.get(user=user)
     posts = Post.objects.filter(user=user)
-    can_view = profile.can_view(request)
+    can_view = profile.can_view(request.user)
     rel_profile = Profile.objects.get(user=request.user)
     rel_r = Relationship.objects.filter(sender=rel_profile)
     rel_s = Relationship.objects.filter(receiver=rel_profile)
@@ -328,7 +328,7 @@ def friends(request):
 def user_friends(request, username):    
     user = User.objects.get(username=username)
     profile = Profile.objects.get(user=user)
-    can_view = profile.can_view(request)
+    can_view = profile.can_view(request.user)
     rel_profile = Profile.objects.get(user=request.user)
     rel_r = Relationship.objects.filter(sender=rel_profile)
     rel_s = Relationship.objects.filter(receiver=rel_profile)

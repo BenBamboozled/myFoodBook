@@ -20,7 +20,7 @@ class Post(models.Model):
     datePosted = models.DateTimeField(default=timezone.now)
     tags = TaggableManager(blank=True)
     likes = models.ManyToManyField(User, related_name='like_post')
-    privacy = models.CharField(max_length=7, choices=PRIVACY_CHOICES, default="public")
+    privacy = models.CharField(max_length=7, choices=PRIVACY_CHOICES, default='public')
 
     ordering = ['-datePosted']
 
@@ -69,7 +69,7 @@ class Profile(models.Model):
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 
-    privacy = models.CharField(max_length=7, choices=PRIVACY_CHOICES, default="public")
+    privacy = models.CharField(max_length=7, choices=PRIVACY_CHOICES, default='public')
 
     objects = ProfileManager()
 
@@ -80,8 +80,8 @@ class Profile(models.Model):
     def total_friends(self):
         return self.friends.all().count()
 
-    def can_view(self, request):
-        return self.privacy == "public" or (request.user.is_authenticated and self.privacy == "friends" and Profile.objects.filter(friends=request.user).exists())
+    def can_view(self, user):
+        return self.privacy == "public" or (user.is_authenticated and self.privacy == "friends" and Profile.objects.filter(friends=user).exists())
 
     def __str__(self): #to string for Profile Model
         return f'{self.user.username} Profile'
