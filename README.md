@@ -2,16 +2,15 @@
 
 ## Instructions
 
-1. if you do not have python installed, download and install for your computer make sure to add python to PATH im using version 3.7 but newer versions should work fine
-2. After python is installed you need to install dependencies requirements. You can do that with this command in cmd or terminal\
-   `pip install django django-crispy-forms django-taggit django-autocomplete-light Pillow`
-   or
+1. If you do not have Python installed, download and install for your computer make sure to add python to PATH, Python 3.7 and newer versions should work fine.
+2. Now open the project directory provided, with command prompt or terminal using the cd command. Once in the project directory you need to install needed dependencies, with one of the two commands below:
    `pip install -r requirements.txt`
-3. Now clone or download the source code from github
-4. Navigate to the folder in cmd or terminal. I open the folder in VS Studio code to make it easy but you can do in regualar terminal by using cd command.
-5. once your in the project folder type this command\
+   or
+   `pip install django django-crispy-forms django-taggit django-autocomplete-light Pillow PyMySQL django-storages google-cloud-storage`
+3. If everything is installed correctly, from inside the main project directory in cmd you can run this command:
    `python manage.py runserver`
-6. If everything worked correctly you should be able to open a web browser and navigate to [http://localhost:8000](http://localhost:8000) where the web app should display
+4. If everything worked correctly you should be able to open a web browser and navigate to [http://localhost:8000](http://localhost:8000) where the web app should display.
+5. To end the session just hit ctrl-C in your cmd and the server will stop.
 
 The main app directory is in the foodBookApp it has models.py for database, views.py for different views, urls.py for url patterns, in the templates folder there are component templates for each page, the templates inherit from base.html which helps from having to reuse same code.
 
@@ -28,14 +27,11 @@ Gist: Fork a personal copy of repository, (recommended) work on self/feature bra
 
 - If db.sqlite3 still tracked by git after gitignore entry update, `git update-index --skip-worktree db.sqlite3` in root directory to untrack (unstage if staged)
 
-## Profile add/remove friends
+## Deployment to Google Cloud
 
-- the profile add/remove/awaiting friends button is working for new users after sign up but does not seem to be working correct for existing users.
-
-## Deployment to Google CLoud
-
-- Everything is deployed from this git [https://myfoodbook-296719.uc.r.appspot.com/](https://myfoodbook-296719.uc.r.appspot.com/)
-- the only thing not updated is the settings.py which included private information like password and database information. I can send the updated deployment settings.py to other team members but do not want to post sensitive info to github.
+- Everything is deployed from this git at [https://myfoodbook-296719.uc.r.appspot.com/](https://myfoodbook-296719.uc.r.appspot.com/)
+- settings.py has boolean flag DEPLOY when set to true it uses the cloud database else it uses the sqlite development database. By default it will use dev database.
+- You will need two files that are not included in this repo because of sensitive info. You will need /etc/config.json and credentials.json please cointact me and I will give team member these files if needed. They will be included with the folder I turn in for the project.
 - Hosted on the Google Cloud Platform for security, performance, scalabilitly
 - Uses a cloud mysql database also provided by the Google Cloud Platform
 - Any bugs or fixes can be pulled here and I will update to the deployment platform.
