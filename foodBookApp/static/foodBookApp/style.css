@@ -88,19 +88,6 @@ input:focus {
   color: #fff;
 }
 
-.desktopMenu {
-  height: 90%;
-  width: 250px;
-  background-color: #273443;
-  position: fixed;
-  left: 0;
-  border-right: 3px solid #1ebea5;
-}
-
-.desktopMenu.open {
-  -webkit-transform: translateX(0%);
-  transform: translateX(0%);
-}
 .forms {
   margin-left: 250px;
 }
@@ -142,18 +129,6 @@ input:focus {
     color: black;
     margin: 0 0.7rem;
     width: 95%;
-  }
-
-  .desktopMenu {
-    height: 90%;
-    width: 250px;
-    background-color: #273443;
-    position: fixed;
-    left: 0;
-    -webkit-transform: translateX(-100%);
-    transform: translateX(-100%);
-    -webkit-transition: all ease 0.25s;
-    transition: all ease 0.25s;
   }
 }
 
@@ -458,10 +433,4 @@ div.desc {
   .responsive {
     width: 100%;
   }
-}
-
-.clearfix:after {
-  content: "";
-  display: table;
-  clear: both;
 }
