@@ -143,23 +143,11 @@ class ProfilePagePostListView(ListView):
             qs.order_by('-datePosted') #if profile belongs to log in user returns all posts even private ones
             return qs
 
-        if self.request.user.is_authenticated and profile.privacy == 'public': #if user is logged in and the current profile is public
-            if self.request.user in profile.friends.all(): 
-                qs = qs.filter(Q(privacy="public") | (Q(privacy="friends"))) #if friends show all public and friends only posts
-            else:
-                qs = qs.filter(privacy="public") #else jsut show public post
+        if self.request.user in profile.friends.all(): 
+            qs = qs.filter(Q(privacy="public") | (Q(privacy="friends"))) #if friends show all public and friends only posts
         else:
-            if not self.request.user.is_authenticated: #if user is not logged in
-                if profile.privacy == 'public':
-                    qs = qs.filter(privacy="public") #show only public posts if profile privacy is public
-                else:
-                    qs = qs.exclude(user=profile.user) #else dont show any posts because user is not loggged in and the profile is either private or friends only
-            else:
-                if self.request.user in profile.friends.all():
-                    qs = qs.filter(Q(privacy="public") | (Q(privacy="friends"))) #will show if profile is friends only
-                else:
-                    qs = qs.exclude(user=profile.user)
-                    
+            qs = qs.filter(privacy="public") #else just show public posts
+           
         qs.order_by('-datePosted')
         return qs
 
@@ -455,7 +443,7 @@ def get_main_feed(request):
                 results.append(post)
 
     for post in Post.objects.filter(privacy='public').order_by('-datePosted').distinct()[:5]:
-            if post not in results and post.user.profile.privacy != 'private' :
+            if post not in results:
                 results.append(post) # only add post if nota already in main feed
 
     results.reverse()
