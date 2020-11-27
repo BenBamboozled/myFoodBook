@@ -30,8 +30,8 @@ Gist: Fork a personal copy of repository, (recommended) work on self/feature bra
 ## Deployment to Google Cloud
 
 - Everything is deployed from this git at [https://myfoodbook-296719.uc.r.appspot.com/](https://myfoodbook-296719.uc.r.appspot.com/)
-- settings.py has boolean flag DEPLOY when set to true it uses the cloud database else it uses the sqlite development database. By default it will use dev database, do not try to use cloud sql database on local machine if you are not connected through the google cloud proxy, otherwise it the database wont connect and manage.py will hang. It will be easier just to keep DEPLOY = False while working with source code.
-- You will need two files that are not included in this repo because of sensitive info. You will need /etc/config.json and credentials.json please cointact me and I will give team member these files if needed. They will be included with the folder I turn in for the project.
+- settings.py has boolean flag DEPLOY when set to true it uses the cloud database else it uses the sqlite development database. By default it will use dev database, do not try to use cloud sql database on local machine if you are not connected through the google cloud proxy, otherwise the database wont connect and manage.py will hang. It will be easier just to keep DEPLOY = False while working with source code.
+- You will need two files that are not included in this repo because of sensitive info. You will need /etc/config.json and credentials.json please contact me and I will give team member these files if needed. They will be included with the folder I turn in for the project.
 - Hosted on the Google Cloud Platform for security, performance, scalabilitly
 - Uses a cloud mysql database also provided by the Google Cloud Platform
 - Any bugs or fixes can be pulled here and I will update to the deployment platform.
