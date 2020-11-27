@@ -454,7 +454,7 @@ def get_main_feed(request):
             for post in posts:
                 results.append(post)
 
-    for post in Post.objects.filter(privacy='public'):
+    for post in Post.objects.filter(privacy='public').order_by('-datePosted').distinct()[:5]:
             if post not in results and post.user.profile.privacy != 'private' :
                 results.append(post) # only add post if nota already in main feed
 
