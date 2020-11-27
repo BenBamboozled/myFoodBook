@@ -14,9 +14,6 @@ from pathlib import Path
 import os
 import json
 
-with open('etc/config.json') as config_file:
-    config = json.load(config_file)
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -33,6 +30,9 @@ DEPLOY = False
 
 ALLOWED_HOSTS = ["*"]
 
+if DEPLOY:
+    with open('etc/config.json') as config_file:
+        config = json.load(config_file)
 
 # Application definition
 
@@ -198,9 +198,10 @@ LOGIN_REDIRECT_URL='home'
 
 TAGGIT_CASE_INSENSITIVE = True
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = config['EMAIL_USER']
-EMAIL_HOST_PASSWORD = config['EMAIL_PASS']
+if DEPLOY:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = 'smtp.gmail.com'
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+    EMAIL_HOST_USER = config['EMAIL_USER']
+    EMAIL_HOST_PASSWORD = config['EMAIL_PASS']
