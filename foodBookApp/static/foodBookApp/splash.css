@@ -1,5 +1,5 @@
 body {
-  background-image: url("http://localhost:8000/static/foodBookApp/pizza-3007395_1920.jpg");
+  background-image: url("{% static 'foodBookApp/pizza-3007395_1920.jpg' %}");
   background-position: center;
   font-size: 20px;
   font-family: Ubuntu;

@@ -437,9 +437,10 @@ def get_main_feed(request):
                 results.append(post)
 
     for post in Post.objects.filter(privacy='public').order_by('-datePosted').distinct()[:5]:
-        results.append(post)
+            if post not in results:  
+                results.append(post) # only add post if nota already in main feed
 
-    # results.reverse()
+    results.reverse()
 
     context = {
         'posts': results,
