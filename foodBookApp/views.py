@@ -282,15 +282,16 @@ def photos(request, username):
     profile = Profile.objects.get(user=user)
     posts = Post.objects.filter(user=user)
     can_view = profile.can_view(request.user)
-    rel_profile = Profile.objects.get(user=request.user)
-    rel_r = Relationship.objects.filter(sender=rel_profile)
-    rel_s = Relationship.objects.filter(receiver=rel_profile)
     rel_receiver = []
     rel_sender = []
-    for item in rel_r:
-        rel_receiver.append(item.receiver.user)
-    for item in rel_s:
-        rel_sender.append(item.sender.user)
+    if request.user.is_authenticated:
+        rel_profile = Profile.objects.get(user=request.user)
+        rel_r = Relationship.objects.filter(sender=rel_profile)
+        rel_s = Relationship.objects.filter(receiver=rel_profile)
+        for item in rel_r:
+            rel_receiver.append(item.receiver.user)
+        for item in rel_s:
+            rel_sender.append(item.sender.user)
     context = {
         'username': username,
         # 'user': user,
@@ -330,15 +331,16 @@ def user_friends(request, username):
     user = User.objects.get(username=username)
     profile = Profile.objects.get(user=user)
     can_view = profile.can_view(request.user)
-    rel_profile = Profile.objects.get(user=request.user)
-    rel_r = Relationship.objects.filter(sender=rel_profile)
-    rel_s = Relationship.objects.filter(receiver=rel_profile)
     rel_receiver = []
     rel_sender = []
-    for item in rel_r:
-        rel_receiver.append(item.receiver.user)
-    for item in rel_s:
-        rel_sender.append(item.sender.user)
+    if request.user.is_authenticated:
+        rel_profile = Profile.objects.get(user=request.user)
+        rel_r = Relationship.objects.filter(sender=rel_profile)
+        rel_s = Relationship.objects.filter(receiver=rel_profile)
+        for item in rel_r:
+            rel_receiver.append(item.receiver.user)
+        for item in rel_s:
+            rel_sender.append(item.sender.user)
 
     context = {
         'profile':profile,
