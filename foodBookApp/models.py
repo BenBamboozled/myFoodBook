@@ -27,13 +27,14 @@ class Post(models.Model):
     def total_likes(self):
         return self.likes.all().count()
 
-
+#represent a comment to a post, hold the body of the comment, the post, and the user who posted the comment
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
     body = models.TextField(max_length=300)
     datePosted =  models.DateTimeField(default=timezone.now)
 
+##Profile MAnager povides additonal functions thatg interact with profile model
 class ProfileManager(models.Manager):
     def get_all_profiles_to_invite(self, sender):
         profiles = Profile.objects.all().exclude(user=sender)
@@ -56,7 +57,6 @@ class ProfileManager(models.Manager):
     def get_all_profiles(self, me):
         profiles = Profile.objects.all().exclude(user=me)
         return profiles
-
 
 
 
@@ -98,12 +98,13 @@ STATUS_CHOICES = (
         ('accepted', 'accepted')
     )
 )
-
+#relationship manager provides a invataions receiver function for each user
 class RelationshipManager(models.Manager):
     def invatations_received(self, receiver):
         qs = Relationship.objects.filter(receiver=receiver, status='send')
         return qs
 
+##Relationship represents friend relation between two user, one user is sender of the friend request the other the receiver the two user become friends when the relationship is set to accepted
 class Relationship(models.Model):
     sender = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='sender')
     receiver = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='receiver')

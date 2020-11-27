@@ -5,6 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import Post,  Profile, Comment
 from dal import autocomplete
 
+#Forms for user input created below
 class UserRegistrationForm(UserCreationForm):
     email = forms.EmailField()
 
