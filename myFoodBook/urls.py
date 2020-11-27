@@ -35,11 +35,8 @@ urlpatterns = [
     path('login/',auth_views.LoginView.as_view(template_name='foodBookApp/login.html'), name='login'),
     path('logout/',auth_views.LogoutView.as_view(template_name='foodBookApp/logout.html'), name='logout'),
     path('change-password/', auth_views.PasswordChangeView.as_view(template_name='foodBookApp/change-password.html'),name='change-password'),
-<<<<<<< Updated upstream
     path('reset-password', auth_views.PasswordResetView.as_view(template_name='foodBookApp/reset-password.html'),name='reset-password'),
-=======
     path('reset-password/', auth_views.PasswordResetView.as_view(),name='reset-password'),
->>>>>>> Stashed changes
     path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(template_name='foodBookApp/change-password-done.html'), name='password_change_done'),
     path('reset-password/done/', auth_views.PasswordResetDoneView.as_view(template_name='foodBookApp/reset-password-done.html'), name='password_reset_done'),
     path('reset-password/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='foodBookApp/reset-password-confirm.html'), name='password_reset_confirm'),
