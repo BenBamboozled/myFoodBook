@@ -27,6 +27,9 @@ class Post(models.Model):
     def total_likes(self):
         return self.likes.all().count()
 
+    def total_comments(self):
+        return Comment.objects.filter(post=self).count()
+
 #represent a comment to a post, hold the body of the comment, the post, and the user who posted the comment
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
