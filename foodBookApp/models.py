@@ -19,7 +19,7 @@ class Post(models.Model):
     image = models.ImageField(blank=True, upload_to="post_pics")
     datePosted = models.DateTimeField(default=timezone.now)
     tags = TaggableManager(blank=True)
-    likes = models.ManyToManyField(User, related_name='like_post')
+    likes = models.ManyToManyField(User, related_name='like_post', blank=True)
     privacy = models.CharField(max_length=7, choices=PRIVACY_CHOICES, default='public')
 
     ordering = ['-datePosted']
