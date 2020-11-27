@@ -26,6 +26,7 @@ from django.conf import settings
 
 
 #URL Patterns for Web App
+#when url pattern is found it triggers the associated view function and returns a webpage with required context
 urlpatterns = [
     path('admin/', admin.site.urls),  
 

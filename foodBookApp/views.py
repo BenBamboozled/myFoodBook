@@ -31,7 +31,7 @@ def register(request):
             form = UserRegistrationForm()
         return render(request, 'foodBookApp/register.html', {'form': form})
 
-
+#returns profiles and posts based of user search query
 def search_results(request):
     query = request.GET.get('q')
     if not query:
@@ -77,10 +77,7 @@ def search_results(request):
     return render(request, 'foodBookApp/search.html', context)
 
 
-# class TagAutocomplete(autocomplete.Select2ListView):
-#     def get_list(self):
-#         return ['Diet', 'Healthy', 'Green', 'Low-carb', 'Indulgence', 'Keto']
-
+#Taggit is used for tags in user posts
 class TagAutocomplete(LoginRequiredMixin, autocomplete.Select2QuerySetView):
     def get_queryset(self):
         qs = Tag.objects.all()
@@ -95,14 +92,11 @@ class TagAutocomplete(LoginRequiredMixin, autocomplete.Select2QuerySetView):
 def splash(request):
     return render(request, 'foodBookApp/splash-page.html')
 
-#home function checks if user is logged in and sends them to correct page
+#home function sends user to main feed
 def home(request):
-    # if request.user.is_authenticated:
-    #     return HttpResponseRedirect('/profile/{}'.format(request.user.username))
-    # else:
-    #     return HttpResponseRedirect('/splash')
     return HttpResponseRedirect(reverse('main-feed'))
 
+#list all profiles that are public so other user  can interact with eachother
 class ProfileListView(LoginRequiredMixin, ListView):
     model = Profile
     template_name = 'foodBookApp/profile-list.html'
@@ -184,6 +178,7 @@ class ProfilePagePostListView(ListView):
         context['profile'] = profile
         return context
 
+# generic class view to update a profile
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     model = Profile
     form_class = ProfileUpdateForm
@@ -192,6 +187,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     def get_object(self):
         return Profile.objects.get(user=self.request.user)
 
+# generic class view to update a post
 class UserUpdateView(LoginRequiredMixin, UpdateView):
     model = User
     form_class = UserUpdateForm
@@ -280,7 +276,7 @@ def post(request, pk):
 
     return render(request, 'foodBookApp/post_detail.html', context)
 
-
+## user profile view that shows all photosd based on their privacy level
 def photos(request, username):
     user = User.objects.get(username=username)
     if not user:
@@ -310,6 +306,7 @@ def photos(request, username):
 
     return render(request, 'foodBookApp/user-photos.html', context)
 
+##returns a webpage with the logged in users photos
 @login_required
 def my_photos(request):
     profile = Profile.objects.get(user=request.user)
@@ -324,13 +321,14 @@ def my_photos(request):
     return render(request, 'foodBookApp/my-photos.html', context)
 
  
-
+## returns the friend of the current logged in user
 @login_required
 def friends(request):
     profile = Profile.objects.get(user=request.user)
     context = {'profile':profile}
     return render(request,'foodBookApp/my-friends.html',context)
 
+#returns a users profile with there added friends list
 def user_friends(request, username):    
     user = User.objects.get(username=username)
     profile = Profile.objects.get(user=user)
@@ -354,6 +352,7 @@ def user_friends(request, username):
 
     return render(request,'foodBookApp/user-friends.html',context)
 
+#allow user to view invites
 @login_required
 def invites_view(request):
     profile = Profile.objects.get(user=request.user)

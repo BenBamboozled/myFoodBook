@@ -1,17 +1,19 @@
 $(document).ready(function () {
+   //edit  post button based on post pk
   $("button[job='edit-post']").click(function (event) {
 
     event.preventDefault();
     window.location.href='/post/' + $(this).children("#pen").attr("value")+'/update';
   });
 
-  
+  //delete  post button based on post pk
   $("button[job='delete-post']").click(function (event) {
 
     event.preventDefault();
     window.location.href='/post/' + $(this).children("#trash").attr("value") +'/delete';
   });
 
+  //like post function uses ajax to send a like to the backend of the website if user is not logged in it will not allow like
   $("button[job='like-post']").click(function (event) {
     event.preventDefault();
     console.log("ello");
@@ -41,25 +43,25 @@ $(document).ready(function () {
     });
 
   });
-    
+  
+  //share function sets share links based on post primary key
    $( ".share" ).click( function(event) {		
     event.preventDefault();
     var id =  $(this).children('i').attr("value");
     console.log(id);
 
-    var url = "https://facebook.com/sharer/sharer.php?u=myfoodbook.me%2Fpost%2F" + id;
-    console.log( url);
-
+    var url = "https://facebook.com/sharer/sharer.php?u=myfoodbook-296719.uc.r.appspot.com%2Fpost%2F" + id;
     $('#facebook-share').attr("href", url );
 
-    url = "https://twitter.com/intent/tweet/?text=Check%20out%20this%20post%20I%20found%20on%20My%20Food%20Book!&url=myfoodbook.me%2Fpost%2F" + id;
+    url = "https://twitter.com/intent/tweet/?text=Check%20out%20this%20post%20I%20found%20on%20My%20Food%20Book!&url=myfoodbook-296719.uc.r.appspot.com%2Fpost%2F" + id;
     $('#twitter-share').attr("href", url );
 
-    url = "mailto:?subject=Check%20out%20this%20post%20I%20found%20on%20My%20Food%20Book&body=myfoodbook.me%2Fpost%2F" + id;
+    url = "mailto:?subject=Check%20out%20this%20post%20I%20found%20on%20My%20Food%20Book&body=myfoodbook-296719.uc.r.appspot.com%2Fpost%2F" + id;
     $('#mail-share').attr("href", url );
 
   });
 
+  //confirms profile disable and disables account if user clicks yes
   $("button[job='disable-account']").click(function (event) {
     event.preventDefault();
 
@@ -70,7 +72,7 @@ $(document).ready(function () {
     } 
 
   });
-
+  //confirms profile delete and deletes account if user clicks yes
   $("button[job='delete-account']").click(function (event) {
     event.preventDefault();
 
