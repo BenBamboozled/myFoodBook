@@ -139,7 +139,7 @@ class ProfilePagePostListView(ListView):
         profile = Profile.objects.get(user__username=self.kwargs.get('username'))
         qs = Post.objects.filter(user=profile.user)
         
-       if self.request.user == profile.user: 
+        if self.request.user == profile.user: 
             qs.order_by('-datePosted') #if profile belongs to log in user returns all posts even private ones
             return qs
 
