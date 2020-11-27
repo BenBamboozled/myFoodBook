@@ -104,7 +104,7 @@ class ProfileListView(LoginRequiredMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        qs = Profile.objects.exclude(privacy=private) #show all profiles except private ones
+        qs = Profile.objects.exclude(privacy='private') #show all profiles except private ones
         return qs
 
     def get_context_data(self, **kwargs):
