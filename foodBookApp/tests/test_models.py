@@ -120,6 +120,6 @@ class ProfileModelTest(TestCase):
     def test_get_abs_url(self):
         # test if proper url is returned by reverse(name)
         user1Profile = Profile.objects.get(pk=1)
-        self.assertURLEqual(user1Profile.get_absolute_url(), '/profile/{}'.format(user1Profile.user.username))
+        self.assertURLEqual(user1Profile.get_absolute_url(), '/profile/{}/'.format(user1Profile.user.username))
 
 # TODO: set and test relationship restrictions

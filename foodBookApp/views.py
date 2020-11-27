@@ -94,7 +94,7 @@ def splash(request):
 
 #home function sends user to main feed
 def home(request):
-    return HttpResponseRedirect('/main')
+    return HttpResponseRedirect(reverse('main-feed'))
 
 #list all profiles that are public so other user  can interact with eachother
 class ProfileListView(LoginRequiredMixin, ListView):
@@ -230,12 +230,15 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 #generic class based view that allows user to delete post belonging to them after completing prompt
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
-    success_url='/'
+    # success_url='/'
     def test_func(self):
         post = self.get_object()
         if self.request.user == post.user:
             return True
         return False
+
+    def get_success_url(self):
+        return reverse('home')
 
 #generic class based view for each post
 class PostDetailView(DetailView):
