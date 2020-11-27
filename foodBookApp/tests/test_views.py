@@ -250,16 +250,37 @@ class PostViewsTests(TestCase):
 
         self.client.force_login(user1)
         response = self.client.post(reverse('delete-post', kwargs={'pk':1}), follow=True)
-        print('redirected: {}'.format(response.get('location')))
+        # print('redirected: {}'.format(response.get('location')))
         self.assertFalse(Post.objects.all())
         self.assertTemplateUsed('foodBookApp/post_confirm_delete.html')
         self.assertRedirects(response, reverse('main-feed'))
 
     def test_post_detail_comment(self):
-        pass
+        user1 = User.objects.get(pk=1)
+        post1 = Post.objects.create(user=user1, body='testbody', privacy='public')
+        response = self.client.get(reverse('view-post', kwargs={'pk':1}))
+        self.assertContains(response, 'Login/Register up to add a comment')
 
-    def test_post_like_unlike(self):
-        pass
+        self.client.force_login(user1)
+        self.assertFalse(Comment.objects.all())
+        view = reverse('view-post', kwargs={'pk':1})
+        response = self.client.post(view, {'body':'testcomment'}, HTTP_REFERER=view, follow=True)
+        comment1 = Comment.objects.get(pk=1)
+        self.assertEqual(comment1.body, 'testcomment')
+        self.assertTemplateUsed('foodBookApp/post_detail.html')
+        self.assertIn(comment1, response.context['comments'])
+        self.assertEqual(post1, response.context['post'])
+        self.assertTrue(response.context['c_form'])
+        self.assertRedirects(response, view)
+
+    # def test_post_like_unlike(self):
+    #     user1 = User.objects.get(pk=1)
+    #     post1 = Post.objects.create(user=user1, body='testbody', privacy='public')
+
+    #     self.assertFalse(Post.objects.filter(likes=user1))
+    #     response = self.client.post(reverse('like-post', kwargs={'pk':1}))
+    #     self.assertEqual(response.json()['error'], 'Must be logged in')
+
 
 # TODO: test profile classes list, update, detail(and post list)
 #       test self and others photos and friends

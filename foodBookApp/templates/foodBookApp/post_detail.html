@@ -4,7 +4,7 @@
 {% block content %}
     {% include 'foodBookApp/snippets/post_block.html' %}
 
-    <h5>Comments({{total_comments}})</h5>
+    <h5>Comments({{post.total_comments}})</h5>
         {% if comments %}
         <div class="d-flex flex-column justify-content-center">
                             
@@ -46,7 +46,7 @@
             </div>
             {% else %}
             <div>
-                <h3 class="text-center">Login/Register up to add a omment</h3>
+                <h3 class="text-center">Login/Register up to add a comment</h3>
                 <a class="d-flex justify-content-center" href="{% url 'splash-page' %}" role="button" aria-haspopup="true" aria-expanded="false">
                     <button class="btn btn-outline-secondary btn-sm">Login/Register</button>
                   </a>

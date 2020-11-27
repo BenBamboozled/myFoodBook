@@ -247,7 +247,7 @@ class PostDetailView(DetailView):
 def post(request, pk):
     post = Post.objects.get(id=pk)
     comments = Comment.objects.filter(post=post)
-    total_comments = Comment.objects.filter(post=post).count()
+    # total_comments = Comment.objects.filter(post=post).count()
 
     new_comment = None
 
@@ -259,7 +259,7 @@ def post(request, pk):
            new_comment.post = post
            new_comment.user = request.user
            new_comment.save()
-           post.total_comments = Comment.objects.filter(post=post).count()
+        #    post.total_comments = Comment.objects.filter(post=post).count()
            post.save()
            messages.success(request, f'Comment added')
            return redirect(request.META.get('HTTP_REFERER'))
@@ -271,7 +271,7 @@ def post(request, pk):
         'post': post,
         'comments': comments,
         'c_form': c_form,
-        'total_comments': total_comments
+        # 'total_comments': total_comments
     }
 
     return render(request, 'foodBookApp/post_detail.html', context)
@@ -453,7 +453,7 @@ def get_main_feed(request):
 ## function for when a user likes a post
 def like(request, pk):
     user = request.user
-    profile = Profile.objects.get(user=user)
+    # profile = Profile.objects.get(user=user)
     post = Post.objects.get(id = pk)
 
     if(post):
@@ -464,7 +464,6 @@ def like(request, pk):
             post.likes.add(user)
             label = 'Unlike'
 
-    
     data = {
         'likes': post.likes.all().count(),
         'label': label
@@ -472,12 +471,13 @@ def like(request, pk):
 
     if not request.user.is_authenticated:
         error = "Must be logged in"
-        data = {
-        'likes': post.likes.all().count(),
-        'label': label,
-        'error': error
-        }
-        return JsonResponse(data, safe=False)
+        data['error'] = error
+        # data = {
+        # 'likes': post.likes.all().count(),
+        # 'label': label,
+        # 'error': error
+        # }
+        # return JsonResponse(data, safe=False)
 
     return JsonResponse(data, safe=False)
 
