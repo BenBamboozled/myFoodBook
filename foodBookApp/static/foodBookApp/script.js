@@ -1,4 +1,12 @@
 $(document).ready(function () {
+
+  //filter users in conversation_form
+  $("#filter").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#userList label").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
    //edit  post button based on post pk
   $("button[job='edit-post']").click(function (event) {
 
