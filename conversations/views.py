@@ -1,13 +1,29 @@
 from django.urls import reverse, reverse_lazy
+from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView
 from django.views.generic.edit import ModelFormMixin, BaseCreateView
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q, Count
+from django.contrib.auth.decorators import login_required
 
 from .models import Message, Conversation
 from .forms import ConversationCreateForm, MessageCreateForm
+
+@login_required
+def get_or_create_direct_conversation(request, username):
+    users = [request.user, User.objects.get(username=username)]
+    existing = Conversation.get_existing_convo(request, users)
+
+    if not existing:
+        convo = Conversation.objects.create()
+        convo.participants.set(users)
+        convo.save()
+    else:
+        convo = existing
+
+    return HttpResponseRedirect(reverse('convo', kwargs={'pk':convo.pk}))
 
 # Create your views here.
 class ConversationCreateView(LoginRequiredMixin, CreateView):
@@ -19,24 +35,15 @@ class ConversationCreateView(LoginRequiredMixin, CreateView):
         initial = initial.copy()
         if self.kwargs.get('username'):
             initial['participants'] = User.objects.filter(Q(username=self.kwargs.get('username')) | Q(username=self.request.user.username)).all()
-            exact = Conversation.objects.filter(participants__in=initial['participants'])
-            if(exact):
-                print(exact)
+        else:
+            initial['participants'] = self.request.user
         return initial
 
-    # def form_valid(self, form):
-    #     # exact = Conversation.objects.annotate(count=Count('participants')).filter(count=len(form.instance.participants))
-    #     # for partic in form.instance.participants:
-    #     #     exact = exact.filter(participant=partic)
-    #     # exact = exact.filter(count=len(form.instance.participants))
-    #     convos = Conversation.objects.all()
-    #     for convo in convos:
-    #         if set([x.username for x in convo.participants.all()]) == set([x.username for x in form.instance.participants.all()]):
-    #             exact = convo
-    #     if(exact):
-    #         # HttpResponseRedirect(reverse('{}'.format(exact.filter().first().pk)))
-    #         print(exact)
-    #     return super(CreateView, self).form_valid(form)
+    # def get_form_kwargs(self):
+    #     kwargs = super(ConversationCreateView, self).get_form_kwargs()
+    #     kwargs['user'] = self.request.user
+    #     # kwargs['q'] = self.request.GET.get('q')
+    #     return kwargs
 
 class ConversationListView(LoginRequiredMixin, ListView):
     model = Conversation

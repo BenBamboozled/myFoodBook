@@ -1,12 +1,20 @@
 import uuid
 
 from django.db import models
+from django.db.models import Q, Count
 from django.contrib.auth.models import User
 from django.shortcuts import reverse
 
 # Create your models here.
 class Conversation(models.Model):
     participants = models.ManyToManyField(User, related_name="conversations")
+
+    def get_existing_convo(self, users):
+        existing = Conversation.objects.filter(participants__in=users).annotate(count=Count('participants')).filter(count=len(users))
+        for convo in existing:
+            if len(convo.participants.all()) == len(users):
+                existing = convo
+        return existing
 
     def get_absolute_url(self):
         return reverse('convo', args=[str(self.id)])

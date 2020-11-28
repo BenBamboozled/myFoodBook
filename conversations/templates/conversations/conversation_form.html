@@ -1,11 +1,35 @@
 {% extends "foodBookApp/base.html" %}
 
 {% block content %}
+  <!-- <form class="form-inline" action="{% url 'new-convo' %}">
+    <input class="form-control form-control-sm mr-sm-2" type="search" name="q" placeholder="Filter" aria-label="Filter">
+  </form>
+  <hr> -->
+<div class="container">
   <form action="" method="post">
     {% csrf_token %}
-    <table>
-    {{ form.as_table }}
-    </table>
+    
+    <input class="form-control" id="filter" type="text" placeholder="Filter">
+    <hr>
+    <div class="list-group" id="userList" style="overflow-y: scroll; max-height: 200px;">
+        {% for choice in form.participants %}
+            <div {% if choice.choice_label == user.username %}hidden{% endif %}>{{ choice }}</div>
+        {% endfor %}
+    </div>
+    </input>
+      
     <input type="submit" value="Submit">
   </form>
+</div>
+
+  <!-- <script>
+    $(document).ready(function(){
+      $("#filter").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#userList label").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+    });
+    </script> -->
 {% endblock %}
